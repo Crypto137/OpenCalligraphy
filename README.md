@@ -2,6 +2,10 @@
 
 OpenCalligraphy is a data browser for the Calligraphy framework developed by Gazillion for Marvel Heroes.
 
+<p align="center">
+<img alt="OpenCalligraphy Screenshot" src="https://raw.githubusercontent.com/Crypto137/OpenCalligraphy/master/docs/screenshot.png"/>
+</p>
+
 ## Features
 
 - Browsing and searching game data.
