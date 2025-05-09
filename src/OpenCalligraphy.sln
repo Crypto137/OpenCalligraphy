@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCalligraphy.Core", "OpenCalligraphy.Core\OpenCalligraphy.Core.csproj", "{D175ACAA-D2AB-4483-B332-B1ABF010E98B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCalligraphy.Gui", "OpenCalligraphy.Gui\OpenCalligraphy.Gui.csproj", "{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D175ACAA-D2AB-4483-B332-B1ABF010E98B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D175ACAA-D2AB-4483-B332-B1ABF010E98B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D175ACAA-D2AB-4483-B332-B1ABF010E98B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D175ACAA-D2AB-4483-B332-B1ABF010E98B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48CAC7CF-B7C3-4468-A3B3-3F73BB329B98}
+	EndGlobalSection
+EndGlobal
