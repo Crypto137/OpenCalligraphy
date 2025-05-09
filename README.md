@@ -10,4 +10,4 @@ OpenCalligraphy is a data browser for the Calligraphy framework developed by Gaz
 
 - Compatibility with all versions of the game.
   
-  - NOTE: 1.17 and before require converting the `.sip` archive to the format used by later versions of the game. The earliest version tested is 1.9.
+  - NOTE: The earliest version tested is 1.9. Version prior to 1.29 utilize a legacy archive format: to use them with OpenCalligraphy, first you need to convert the `mu_cdata.sip` archive to the format used by later versions of the game with [MHSqlitePakRepacker](https://github.com/Crypto137/MHSqlitePakRepacker).
