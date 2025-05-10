@@ -199,6 +199,14 @@ namespace OpenCalligraphy.Core.GameData
             return record.RuntimeBinding;
         }
 
+        public PrototypeDataRefRecord GetPrototypeDataRefRecord(PrototypeId prototypeId)
+        {
+            if (_prototypeRecordDict.TryGetValue(prototypeId, out PrototypeDataRefRecord record) == false)
+                return null;
+
+            return record;
+        }
+
         public IEnumerable<PrototypeId> IteratePrototypes()
         {
             // TODO: Improve this
@@ -206,12 +214,10 @@ namespace OpenCalligraphy.Core.GameData
                 yield return record.PrototypeId;
         }
 
-        public PrototypeDataRefRecord GetPrototypeDataRefRecord(PrototypeId prototypeId)
+        public IEnumerable<Blueprint> IterateBlueprints()
         {
-            if (_prototypeRecordDict.TryGetValue(prototypeId, out PrototypeDataRefRecord record) == false)
-                return null;
-
-            return record;
+            foreach (var record in _blueprintRecordDict.Values)
+                yield return record.Blueprint;
         }
 
         #endregion

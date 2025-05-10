@@ -14,6 +14,10 @@ namespace OpenCalligraphy.Core.GameData
         public BlueprintReference[] Parents { get; }
         public BlueprintReference[] ContributingBlueprints { get; }
 
+        public bool IsPropertyMixin { get; }
+
+        public IReadOnlyCollection<BlueprintMember> Members { get => _memberDict.Values; }
+
         /// <summary>
         /// Deserializes a new <see cref="Blueprint"/> instance from a <see cref="Stream"/>.
         /// </summary>
@@ -47,6 +51,14 @@ namespace OpenCalligraphy.Core.GameData
                 BlueprintMember member = new(reader);
                 _memberDict.Add(member.FieldId, member);
             }
+
+            // HACK: Mark this as a property mixin based on its path
+            IsPropertyMixin = Id.GetName().StartsWith("Property/Mixin/", StringComparison.Ordinal);
+        }
+
+        public override string ToString()
+        {
+            return Id.GetName();
         }
 
         public BlueprintMember GetMember(StringId id)
