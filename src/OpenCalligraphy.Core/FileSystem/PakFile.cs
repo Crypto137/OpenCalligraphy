@@ -2,7 +2,7 @@
 using OpenCalligraphy.Core.Extensions;
 using OpenCalligraphy.Core.Helpers;
 
-namespace OpenCalligraphy.Core.IO
+namespace OpenCalligraphy.Core.FileSystem
 {
     // TODO: This implementation is based on MHServerEmu and is designed for efficient reads, probably need to overhaul this for output.
 

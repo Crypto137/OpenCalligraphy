@@ -1,6 +1,6 @@
 ﻿using OpenCalligraphy.Core.Extensions;
+using OpenCalligraphy.Core.FileSystem;
 using OpenCalligraphy.Core.GameData.Prototypes;
-using OpenCalligraphy.Core.IO;
 using OpenCalligraphy.Core.Logging;
 
 namespace OpenCalligraphy.Core.GameData
