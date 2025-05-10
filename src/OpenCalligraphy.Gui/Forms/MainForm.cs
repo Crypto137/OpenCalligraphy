@@ -1,4 +1,5 @@
-﻿using OpenCalligraphy.Core.FileSystem;
+﻿using OpenCalligraphy.Core.CodeGeneration;
+using OpenCalligraphy.Core.FileSystem;
 using OpenCalligraphy.Core.GameData;
 using OpenCalligraphy.Core.GameData.Prototypes;
 using OpenCalligraphy.Core.Locales;
@@ -112,9 +113,20 @@ namespace OpenCalligraphy.Gui.Forms
             _dataRefIndex.SaveToFile(cacheFilePath);
         }
 
-        private void ClearOpenedFiles()
+        private void ExportPrototypeClasses()
         {
-            InspectPrototype(null);
+            using SaveFileDialog dialog = new();
+            dialog.FileName = "Prototypes.cs";
+            dialog.Filter = "C# source file (*.cs)|*.cs|All files (*.*)|*.*";
+
+            DialogResult dialogResult = dialog.ShowDialog(this);
+            if (dialogResult != DialogResult.OK)
+                return;
+
+            string filePath = dialog.FileName;
+            PrototypeClassGenerator.Generate(filePath);
+
+            MessageBox.Show($"Exported prototype classes to '{filePath}'.", "Prototype Class Generator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void TryOpenFile(TreeNode treeNode)
@@ -133,6 +145,11 @@ namespace OpenCalligraphy.Gui.Forms
                 if (prototype != null)
                     InspectPrototype(prototype);
             }
+        }
+
+        private void ClearOpenedFiles()
+        {
+            InspectPrototype(null);
         }
 
         #region File Search
@@ -480,6 +497,11 @@ namespace OpenCalligraphy.Gui.Forms
         private void openPakFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenPakFile();
+        }
+
+        private void exportPrototypeClassesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportPrototypeClasses();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
