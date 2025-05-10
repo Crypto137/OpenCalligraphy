@@ -527,7 +527,7 @@ namespace OpenCalligraphy.Gui.Forms
 #else
             string buildConfig = "Release";
 #endif
-            MessageBox.Show($"OpenCalligraphy\n\nVersion 0.1.0 ({buildConfig})\n\nCopyright © 2025 Crypto137", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"OpenCalligraphy\n\nVersion 0.2.0 ({buildConfig})\n\nCopyright © 2025 Crypto137", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
