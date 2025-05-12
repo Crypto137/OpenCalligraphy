@@ -129,6 +129,22 @@ namespace OpenCalligraphy.Gui.Forms
             MessageBox.Show($"Exported prototype classes to '{filePath}'.", "Prototype Class Generator", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void ExportLocale()
+        {
+            using SaveFileDialog dialog = new();
+            dialog.FileName = "Locale.json";
+            dialog.Filter = "JSON file (*.json)|*.json|All files (*.*)|*.*";
+
+            DialogResult dialogResult = dialog.ShowDialog(this);
+            if (dialogResult != DialogResult.OK)
+                return;
+
+            string filePath = dialog.FileName;
+            LocaleManager.Instance.CurrentLocale.ExportToJson(filePath);
+
+            MessageBox.Show($"Exported locale to '{filePath}'.", "Locale Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void TryOpenFile(TreeNode treeNode)
         {
             if (treeNode.Tag is not FileTreeNode fileTreeNode)
@@ -483,7 +499,7 @@ namespace OpenCalligraphy.Gui.Forms
                 InspectPrototype(prototype, false);
 
             Locale locale = LocaleManager.Instance.CurrentLocale;
-            MessageBox.Show($"Loaded locale '{locale.Name}' ({locale.EntryCount} entries).", "Locale Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Loaded locale '{locale.Name}' ({locale.Entries.Count} entries).", "Locale Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion
@@ -502,6 +518,11 @@ namespace OpenCalligraphy.Gui.Forms
         private void exportPrototypeClassesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportPrototypeClasses();
+        }
+
+        private void exportLocaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportLocale();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

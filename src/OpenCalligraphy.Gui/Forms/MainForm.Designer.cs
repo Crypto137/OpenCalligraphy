@@ -36,6 +36,7 @@
             toolStripSeparator2 = new ToolStripSeparator();
             exportToolStripMenuItem = new ToolStripMenuItem();
             exportPrototypeClassesToolStripMenuItem = new ToolStripMenuItem();
+            exportLocaleToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -128,38 +129,45 @@
             // openPakFileToolStripMenuItem
             // 
             openPakFileToolStripMenuItem.Name = "openPakFileToolStripMenuItem";
-            openPakFileToolStripMenuItem.Size = new Size(152, 22);
+            openPakFileToolStripMenuItem.Size = new Size(180, 22);
             openPakFileToolStripMenuItem.Text = "Open PakFile...";
             openPakFileToolStripMenuItem.Click += openPakFileToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(149, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // exportToolStripMenuItem
             // 
-            exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportPrototypeClassesToolStripMenuItem });
+            exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportPrototypeClassesToolStripMenuItem, exportLocaleToolStripMenuItem });
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(152, 22);
+            exportToolStripMenuItem.Size = new Size(180, 22);
             exportToolStripMenuItem.Text = "Export";
             // 
             // exportPrototypeClassesToolStripMenuItem
             // 
             exportPrototypeClassesToolStripMenuItem.Name = "exportPrototypeClassesToolStripMenuItem";
-            exportPrototypeClassesToolStripMenuItem.Size = new Size(167, 22);
+            exportPrototypeClassesToolStripMenuItem.Size = new Size(180, 22);
             exportPrototypeClassesToolStripMenuItem.Text = "Prototype Classes";
             exportPrototypeClassesToolStripMenuItem.Click += exportPrototypeClassesToolStripMenuItem_Click;
+            // 
+            // exportLocaleToolStripMenuItem
+            // 
+            exportLocaleToolStripMenuItem.Name = "exportLocaleToolStripMenuItem";
+            exportLocaleToolStripMenuItem.Size = new Size(180, 22);
+            exportLocaleToolStripMenuItem.Text = "Locale";
+            exportLocaleToolStripMenuItem.Click += exportLocaleToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(149, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(152, 22);
+            exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -796,5 +804,6 @@
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem exportPrototypeClassesToolStripMenuItem;
+        private ToolStripMenuItem exportLocaleToolStripMenuItem;
     }
 }

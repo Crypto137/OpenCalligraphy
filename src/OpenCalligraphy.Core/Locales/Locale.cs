@@ -1,4 +1,7 @@
 ﻿using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using OpenCalligraphy.Core.Exceptions;
 using OpenCalligraphy.Core.Extensions;
 using OpenCalligraphy.Core.GameData;
@@ -7,6 +10,12 @@ namespace OpenCalligraphy.Core.Locales
 {
     public class Locale
     {
+        private static readonly JsonSerializerOptions JsonOptions = new()
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)   // This is needed to export localized strings correctly
+        };
+
         private readonly Dictionary<LocaleStringId, StringMapEntry> _stringMap = new();
 
         public string Name { get; }
@@ -15,7 +24,7 @@ namespace OpenCalligraphy.Core.Locales
         public string Directory { get; }
         public LocaleFlag[] Flags { get; }
 
-        public int EntryCount { get => _stringMap.Count; }
+        public IReadOnlyDictionary<LocaleStringId, StringMapEntry> Entries { get => _stringMap; }
 
         public Locale()
         {
@@ -89,6 +98,17 @@ namespace OpenCalligraphy.Core.Locales
                 return string.Empty;
 
             return entry.String;
+        }
+
+        public void ExportToJson(string path)
+        {
+            string json = JsonSerializer.Serialize(this, JsonOptions);
+
+            string directory = Path.GetDirectoryName(path);
+            if (System.IO.Directory.Exists(directory) == false)
+                System.IO.Directory.CreateDirectory(directory);
+
+            File.WriteAllText(path, json);
         }
 
         private static bool TryParseLegacyLocaleFile(BinaryReader reader, out string[] values)
