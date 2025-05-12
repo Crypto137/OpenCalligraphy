@@ -1,4 +1,5 @@
-﻿using OpenCalligraphy.Core.Exceptions;
+﻿using System.Text;
+using OpenCalligraphy.Core.Exceptions;
 using OpenCalligraphy.Core.Extensions;
 using OpenCalligraphy.Core.GameData;
 
@@ -33,7 +34,16 @@ namespace OpenCalligraphy.Core.Locales
             CalligraphyHeader header = new(reader);
 
             if (header.Magic != "LOC")
-                throw new CalligraphyException("Invalid locale file signature.");
+            {
+                if (TryParseLegacyLocaleFile(reader, out string[] values) == false)
+                    throw new CalligraphyException("Invalid locale file.");
+
+                Name = values[0];
+                LanguageDisplayName = values[1];
+                RegionDisplayName = values[2];
+                Directory = values[3];
+                return;
+            }
 
             if (header.Version != 2)
                 throw new CalligraphyException($"Unsupported locale file version {header.Version}.");
@@ -59,7 +69,7 @@ namespace OpenCalligraphy.Core.Locales
             if (header.Magic != "STR")
                 throw new CalligraphyException($"Invalid string stream signature for stream {streamName}.");
 
-            if (header.Version != 2)
+            if (header.Version > 2)
                 throw new CalligraphyException($"Unsupported string stream version {header.Version}.");
 
             // Load data
@@ -79,6 +89,20 @@ namespace OpenCalligraphy.Core.Locales
                 return string.Empty;
 
             return entry.String;
+        }
+
+        private static bool TryParseLegacyLocaleFile(BinaryReader reader, out string[] values)
+        {
+            // Legacy locale files (pre-1.32) are just text files consisting of four lines separated by \r\n.
+            // They have no headers, so we identify them by checking the number of values we get.
+            const int NumValues = 4;
+
+            reader.BaseStream.Position = 0;
+            byte[] bytes = reader.ReadBytes((int)reader.BaseStream.Length);
+            string legacyLocale = Encoding.UTF8.GetString(bytes);
+            values = legacyLocale.Split("\r\n");
+
+            return values.Length == NumValues;
         }
     }
 }
