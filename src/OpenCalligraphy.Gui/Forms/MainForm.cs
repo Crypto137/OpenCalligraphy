@@ -19,12 +19,15 @@ namespace OpenCalligraphy.Gui.Forms
         private readonly FileTree _searchFileTree = new("Calligraphy");
 
         private bool _prototypeMetadataToggle;
+        private bool _evalExpressionStringToggle;
 
         public MainForm()
         {
             InitializeComponent();
 
+            // TODO: Save settings
             SetPrototypeMetadataToggle(false);
+            SetEvalExpressionStringToggle(false);
         }
 
         #region Data Logic
@@ -301,6 +304,12 @@ namespace OpenCalligraphy.Gui.Forms
             PopulatePrototypeTreeView(prototype);
         }
 
+        private void ReloadPrototype()
+        {
+            if (prototypeTreeView.Tag is Prototype prototype)
+                InspectPrototype(prototype, false);
+        }
+
         private void EnablePrototypeControls(Prototype prototype)
         {
             bool hasPrototype = prototype != null;
@@ -355,7 +364,15 @@ namespace OpenCalligraphy.Gui.Forms
             prototypeRuntimeBindingLabel.Visible = value;
             prototypeRuntimeBindingTextBox.Visible = value;
 
-            prototypeToggleMetadataToolStripMenuItem.Checked = value;
+            showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
+        }
+
+        private void SetEvalExpressionStringToggle(bool value)
+        {
+            _evalExpressionStringToggle = value;
+            showEvalExpressionStringsToolStripMenuItem.Checked = value;
+
+            ReloadPrototype();
         }
 
         private void PopulatePrototypeTreeView(Prototype prototype)
@@ -368,7 +385,12 @@ namespace OpenCalligraphy.Gui.Forms
             if (prototype != null)
             {
                 root = prototypeTreeView.Nodes.Add(string.Empty);
-                PrototypeTreeHelper.SetPrototype(root, prototype, prototype?.ToString());
+
+                PrototypeTreeHelperFlags flags = PrototypeTreeHelperFlags.None;
+                if (_evalExpressionStringToggle)
+                    flags |= PrototypeTreeHelperFlags.UseEvalExpressionStrings;
+
+                PrototypeTreeHelper.SetPrototype(root, prototype, prototype?.ToString(), flags);
                 root.Expand();
             }
 
@@ -495,8 +517,7 @@ namespace OpenCalligraphy.Gui.Forms
                 return;
 
             // Reload the current prototype if succesfully loaded
-            if (prototypeTreeView.Tag is Prototype prototype)
-                InspectPrototype(prototype, false);
+            ReloadPrototype();
 
             Locale locale = LocaleManager.Instance.CurrentLocale;
             MessageBox.Show($"Loaded locale '{locale.Name}' ({locale.Entries.Count} entries).", "Locale Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -530,9 +551,14 @@ namespace OpenCalligraphy.Gui.Forms
             Application.Exit();
         }
 
-        private void prototypeToggleMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showAdditionalPrototypeMetadataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetPrototypeMetadataToggle(_prototypeMetadataToggle == false);
+        }
+
+        private void showEvalExpressionStringsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetEvalExpressionStringToggle(_evalExpressionStringToggle == false);
         }
 
         private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)

@@ -40,7 +40,8 @@
             toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
-            prototypeToggleMetadataToolStripMenuItem = new ToolStripMenuItem();
+            showAdditionalPrototypeMetadataToolStripMenuItem = new ToolStripMenuItem();
+            showEvalExpressionStringsToolStripMenuItem = new ToolStripMenuItem();
             localeToolStripMenuItem = new ToolStripMenuItem();
             loadLocaleToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -129,61 +130,68 @@
             // openPakFileToolStripMenuItem
             // 
             openPakFileToolStripMenuItem.Name = "openPakFileToolStripMenuItem";
-            openPakFileToolStripMenuItem.Size = new Size(180, 22);
+            openPakFileToolStripMenuItem.Size = new Size(152, 22);
             openPakFileToolStripMenuItem.Text = "Open PakFile...";
             openPakFileToolStripMenuItem.Click += openPakFileToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(149, 6);
             // 
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportPrototypeClassesToolStripMenuItem, exportLocaleToolStripMenuItem });
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(152, 22);
             exportToolStripMenuItem.Text = "Export";
             // 
             // exportPrototypeClassesToolStripMenuItem
             // 
             exportPrototypeClassesToolStripMenuItem.Name = "exportPrototypeClassesToolStripMenuItem";
-            exportPrototypeClassesToolStripMenuItem.Size = new Size(180, 22);
+            exportPrototypeClassesToolStripMenuItem.Size = new Size(167, 22);
             exportPrototypeClassesToolStripMenuItem.Text = "Prototype Classes";
             exportPrototypeClassesToolStripMenuItem.Click += exportPrototypeClassesToolStripMenuItem_Click;
             // 
             // exportLocaleToolStripMenuItem
             // 
             exportLocaleToolStripMenuItem.Name = "exportLocaleToolStripMenuItem";
-            exportLocaleToolStripMenuItem.Size = new Size(180, 22);
+            exportLocaleToolStripMenuItem.Size = new Size(167, 22);
             exportLocaleToolStripMenuItem.Text = "Locale";
             exportLocaleToolStripMenuItem.Click += exportLocaleToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(152, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { prototypeToggleMetadataToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { showAdditionalPrototypeMetadataToolStripMenuItem, showEvalExpressionStringsToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "View";
             // 
-            // prototypeToggleMetadataToolStripMenuItem
+            // showAdditionalPrototypeMetadataToolStripMenuItem
             // 
-            prototypeToggleMetadataToolStripMenuItem.Name = "prototypeToggleMetadataToolStripMenuItem";
-            prototypeToggleMetadataToolStripMenuItem.Size = new Size(269, 22);
-            prototypeToggleMetadataToolStripMenuItem.Text = "Show Additional Prototype Metadata";
-            prototypeToggleMetadataToolStripMenuItem.Click += prototypeToggleMetadataToolStripMenuItem_Click;
+            showAdditionalPrototypeMetadataToolStripMenuItem.Name = "showAdditionalPrototypeMetadataToolStripMenuItem";
+            showAdditionalPrototypeMetadataToolStripMenuItem.Size = new Size(269, 22);
+            showAdditionalPrototypeMetadataToolStripMenuItem.Text = "Show Additional Prototype Metadata";
+            showAdditionalPrototypeMetadataToolStripMenuItem.Click += showAdditionalPrototypeMetadataToolStripMenuItem_Click;
+            // 
+            // showEvalExpressionStringsToolStripMenuItem
+            // 
+            showEvalExpressionStringsToolStripMenuItem.Name = "showEvalExpressionStringsToolStripMenuItem";
+            showEvalExpressionStringsToolStripMenuItem.Size = new Size(269, 22);
+            showEvalExpressionStringsToolStripMenuItem.Text = "Show Eval Expression Strings";
+            showEvalExpressionStringsToolStripMenuItem.Click += showEvalExpressionStringsToolStripMenuItem_Click;
             // 
             // localeToolStripMenuItem
             // 
@@ -790,7 +798,7 @@
         private TextBox prototypeFlagsTextBox;
         private TextBox prototypeRuntimeBindingTextBox;
         private ToolStripMenuItem viewToolStripMenuItem;
-        private ToolStripMenuItem prototypeToggleMetadataToolStripMenuItem;
+        private ToolStripMenuItem showAdditionalPrototypeMetadataToolStripMenuItem;
         private Button fileSearchClearButton;
         private TableLayoutPanel prototypeSearchTableLayoutPanel;
         private Button prototypeSearchClearButton;
@@ -805,5 +813,6 @@
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem exportPrototypeClassesToolStripMenuItem;
         private ToolStripMenuItem exportLocaleToolStripMenuItem;
+        private ToolStripMenuItem showEvalExpressionStringsToolStripMenuItem;
     }
 }

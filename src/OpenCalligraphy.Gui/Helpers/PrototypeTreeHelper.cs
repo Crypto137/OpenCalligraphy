@@ -6,6 +6,13 @@ using OpenCalligraphy.Gui.Models;
 
 namespace OpenCalligraphy.Gui.Helpers
 {
+    [Flags]
+    public enum PrototypeTreeHelperFlags
+    {
+        None                        = 0,
+        UseEvalExpressionStrings    = 1 << 0,
+    }
+
     /// <summary>
     /// Helper functions for displaying <see cref="Prototype"/> data in a <see cref="TreeView"/>.
     /// </summary>
@@ -13,19 +20,21 @@ namespace OpenCalligraphy.Gui.Helpers
     {
         #region Build
 
-        public static void SetPrototype(TreeNode root, Prototype prototype, string name)
+        public static void SetPrototype(TreeNode root, Prototype prototype, string name, PrototypeTreeHelperFlags flags)
         {
             root.Text = name;
 
-            // Eval expression string
-            /*
-            string expressionString = EvalExpressionStringBuilder.TryBuildExpressionString(prototype);
-            if (expressionString != string.Empty)
+            // If requested, represent eval prototypes by their expression strings
+            if (flags.HasFlag(PrototypeTreeHelperFlags.UseEvalExpressionStrings))
             {
-                root.Nodes.Add(expressionString);
-                return;
+                string expressionString = EvalExpressionStringBuilder.TryBuildExpressionString(prototype);
+                if (expressionString != string.Empty)
+                {
+                    TreeNode child = root.Nodes.Add(expressionString);
+                    child.Tag = new PrimitiveValueTreeNodeTag(expressionString);
+                    return;
+                }
             }
-            */
 
             // If this is an empty RHStruct, treat it as a data ref
             if (prototype.DataRef == PrototypeId.Invalid && prototype.FieldGroups.Count == 0 && prototype.ParentDataRef != PrototypeId.Invalid)
@@ -61,7 +70,7 @@ namespace OpenCalligraphy.Gui.Helpers
                     foreach (PrototypeField field in fieldList)
                     {
                         TreeNode fieldNode = GetOrCreateNode(new FieldKey(fieldGroup, field), fieldGroupNode, fieldNodes);
-                        SetField(fieldNode, field, highlightFields);
+                        SetField(fieldNode, field, highlightFields, flags);
                     }
                 }
             }
@@ -82,18 +91,18 @@ namespace OpenCalligraphy.Gui.Helpers
             return node;
         }
 
-        private static void SetField(TreeNode node, PrototypeField field, bool highlight)
+        private static void SetField(TreeNode node, PrototypeField field, bool highlight, PrototypeTreeHelperFlags flags)
         {
             if (field.StructureType == CalligraphyStructureType.Simple)
-                SetSimpleField(node, field);
+                SetSimpleField(node, field, flags);
             else if (field.StructureType == CalligraphyStructureType.List)
-                SetListField(node, field);
+                SetListField(node, field, flags);
 
             if (highlight)
                 node.NodeFont = new(node.TreeView.Font, FontStyle.Bold);
         }
 
-        private static void SetSimpleField(TreeNode node, PrototypeField field)
+        private static void SetSimpleField(TreeNode node, PrototypeField field, PrototypeTreeHelperFlags flags)
         {
             switch (field)
             {
@@ -132,7 +141,7 @@ namespace OpenCalligraphy.Gui.Helpers
                         value = $"null ({DataDirectory.Instance.GetPrototypeRuntimeBinding(subtype)})";
                     }
 
-                    SetPrototype(node, rhStructField.Value, $"{field.FieldId.GetName()}: {value}");
+                    SetPrototype(node, rhStructField.Value, $"{field.FieldId.GetName()}: {value}", flags);
                     return;
 
                 case PrototypeStringField stringField:
@@ -158,7 +167,7 @@ namespace OpenCalligraphy.Gui.Helpers
             node.Text = $"{field.FieldId.GetName()}: {field}";
         }
 
-        private static void SetListField(TreeNode node, PrototypeField field)
+        private static void SetListField(TreeNode node, PrototypeField field, PrototypeTreeHelperFlags flags)
         {
             node.Nodes.Clear();
             node.Text = $"{field.FieldId.GetName()}: {field}";
@@ -190,7 +199,7 @@ namespace OpenCalligraphy.Gui.Helpers
                     {
                         Prototype rhStruct = rhStructListField[i];
                         TreeNode child = node.Nodes.Add(string.Empty);
-                        SetPrototype(child, rhStruct, $"[{i}] {rhStruct}");
+                        SetPrototype(child, rhStruct, $"[{i}] {rhStruct}", flags);
                     }
                     break;
 
