@@ -65,5 +65,23 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 _fieldGroups.Add(fieldGroup);
             }
         }
+
+        public T GetField<T>(StringId fieldId, int fieldGroupIndex = 0) where T: PrototypeField
+        {
+            if (fieldGroupIndex < 0 || fieldGroupIndex >= FieldGroups.Count)
+                return null;
+
+            PrototypeFieldGroup fieldGroup = FieldGroups[fieldGroupIndex];
+
+            Type fieldType = typeof(T);
+
+            if (fieldType.IsAssignableTo(typeof(PrototypeSimpleField)))
+                return fieldGroup.GetSimpleField<T>(fieldId);
+            
+            if (fieldType.IsAssignableTo(typeof(PrototypeListField)))
+                return fieldGroup.GetListField<T>(fieldId);
+
+            return null;
+        }
     }
 }

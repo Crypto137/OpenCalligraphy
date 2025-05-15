@@ -17,6 +17,16 @@ namespace OpenCalligraphy.Gui.Helpers
         {
             root.Text = name;
 
+            // Eval expression string
+            /*
+            string expressionString = EvalExpressionStringBuilder.TryBuildExpressionString(prototype);
+            if (expressionString != string.Empty)
+            {
+                root.Nodes.Add(expressionString);
+                return;
+            }
+            */
+
             // If this is an empty RHStruct, treat it as a data ref
             if (prototype.DataRef == PrototypeId.Invalid && prototype.FieldGroups.Count == 0 && prototype.ParentDataRef != PrototypeId.Invalid)
                 root.Tag = new DataRefTreeNodeTag(prototype.ParentDataRef);

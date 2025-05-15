@@ -52,5 +52,27 @@
                 AddField(field);
             }
         }
+
+        public T GetSimpleField<T>(StringId fieldId) where T: PrototypeField
+        {
+            foreach (PrototypeField field in _simpleFields)
+            {
+                if (field.FieldId == fieldId)
+                    return field as T;
+            }
+
+            return null;
+        }
+
+        public T GetListField<T>(StringId fieldId) where T: PrototypeField
+        {
+            foreach (PrototypeField field in _listFields)
+            {
+                if (field.FieldId == fieldId)
+                    return field as T;
+            }
+
+            return null;
+        }
     }
 }
