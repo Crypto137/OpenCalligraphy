@@ -74,11 +74,22 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
 
             return DataDirectory.Instance.GetPrototypeRuntimeBinding(protoRef) switch
             {
+                "ExportErrorPrototype"          => BuildExportErrorString(prototype),
                 "AssignPropPrototype"           => BuildAssignPropString(prototype),
+                "SwapPropPrototype"             => BuildSwapPropString(prototype),
+                "AssignPropEvalParamsPrototype" => BuildAssignPropEvalParamsString(prototype),
+                "HasPropPrototype"              => BuildHasPropString(prototype),
                 "LoadPropPrototype"             => BuildLoadPropString(prototype),
+                "LoadPropContextParamsPrototype"=> BuildLoadPropContextParamsString(prototype),
+                "LoadPropEvalParamsPrototype"   => BuildLoadPropEvalParamsString(prototype),
                 "LoadBoolPrototype"             => BuildLoadBoolString(prototype),
                 "LoadIntPrototype"              => BuildLoadIntString(prototype),
                 "LoadFloatPrototype"            => BuildLoadFloatString(prototype),
+                "LoadCurvePrototype"            => BuildLoadCurveString(prototype),
+                "LoadAssetRefPrototype"         => BuildLoadAssetRefString(prototype),
+                "LoadProtoRefPrototype"         => BuildLoadProtoRefString(prototype),
+                "LoadContextIntPrototype"       => BuildLoadContextIntString(prototype),
+                "LoadContextProtoRefPrototype"  => BuildLoadContextProtoRefString(prototype),
                 "AddPrototype"                  => BuildAddString(prototype),
                 "SubPrototype"                  => BuildSubString(prototype),
                 "MultPrototype"                 => BuildMultString(prototype),
@@ -96,8 +107,15 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 "MaxPrototype"                  => BuildMaxString(prototype),
                 "MinPrototype"                  => BuildMinString(prototype),
                 "ModulusPrototype"              => BuildModulusString(prototype),
+                "RandomFloatPrototype"          => BuildRandomFloatString(prototype),
+                "RandomIntPrototype"            => BuildRandomIntString(prototype),
                 _                               => runtimeBinding,
             };
+        }
+
+        private static string BuildExportErrorString(Prototype prototype)
+        {
+            return "ExportError";
         }
 
         private static string BuildAssignPropString(Prototype prototype)
@@ -114,6 +132,49 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 eval.IsNull == false ? TryBuildExpressionString(eval.Value) : "NULL");
         }
 
+        private static string BuildSwapPropString(Prototype prototype)
+        {
+            PrototypeAssetField leftContext = prototype.GetField<PrototypeAssetField>((StringId)7366053580165617014);
+            PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)13518078678604190343);
+            PrototypeAssetField rightContext = prototype.GetField<PrototypeAssetField>((StringId)3171819579921274345);
+
+            if (prop.IsNull)
+                return "!PropError!";
+
+            return $"SwapProp(LeftContext=[{leftContext.Value.GetName()}], RightContext=[{rightContext.Value.GetName()}], Prop={{{PropertyHelper.BuildPropertyName(prop.Value)}}}";
+        }
+
+        private static string BuildAssignPropEvalParamsString(Prototype prototype)
+        {
+            PrototypeRHStructField param0 = prototype.GetField<PrototypeRHStructField>((StringId)1279800786586638333);
+            PrototypeRHStructField param1 = prototype.GetField<PrototypeRHStructField>((StringId)15954217832305858558);
+            PrototypeRHStructField param2 = prototype.GetField<PrototypeRHStructField>((StringId)6046015935869032447);
+            PrototypeRHStructField param3 = prototype.GetField<PrototypeRHStructField>((StringId)11479046443144779776);
+            PrototypePrototypeField prop = prototype.GetField<PrototypePrototypeField>((StringId)2442776993551423357);
+            PrototypeRHStructField eval = prototype.GetField<PrototypeRHStructField>((StringId)1475575110373087076);
+
+            if (prop.Value == PrototypeId.Invalid)
+                return $"!PropError! = {(eval?.IsNull == false ? TryBuildExpressionString(eval.Value) : "NULL")}";
+
+            return string.Format("{0}({1},{2},{3},{4}) = {5}",
+                prop?.Value.GetNameFormatted(),
+                param0?.IsNull == false ? TryBuildExpressionString(param0.Value) : "",
+                param1?.IsNull == false ? TryBuildExpressionString(param1.Value) : "",
+                param2?.IsNull == false ? TryBuildExpressionString(param2.Value) : "",
+                param3?.IsNull == false ? TryBuildExpressionString(param3.Value) : "",
+                eval?.IsNull == false ? TryBuildExpressionString(eval.Value) : "NULL");
+        }
+
+        private static string BuildHasPropString(Prototype prototype)
+        {
+            PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)27003814968955400);
+
+            if (prop.IsNull)
+                return "!PropError!";
+
+            return PropertyHelper.BuildPropertyName(prop.Value);
+        }
+
         private static string BuildLoadPropString(Prototype prototype)
         {
             PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)5836910736336360044);
@@ -122,6 +183,37 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 return "!PropError!";
 
             return PropertyHelper.BuildPropertyName(prop.Value);
+        }
+
+        private static string BuildLoadPropContextParamsString(Prototype prototype)
+        {
+            PrototypeAssetField propertyCollectionContext = prototype.GetField<PrototypeAssetField>((StringId)12241138694009921770);
+            PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)11493498445115496437);
+            PrototypeAssetField propertyIdContext = prototype.GetField<PrototypeAssetField>((StringId)17065615538570403211);
+
+            if (prop.IsNull)
+                return "!PropError!";
+
+            return $"{PropertyHelper.BuildPropertyName(prop.Value)}(<PropColContext[{propertyCollectionContext.Value.GetName()}], PropIdContext[{propertyIdContext.Value.GetName()}]>)";
+        }
+
+        private static string BuildLoadPropEvalParamsString(Prototype prototype)
+        {
+            PrototypeRHStructField param0 = prototype.GetField<PrototypeRHStructField>((StringId)5181251555885324056);
+            PrototypeRHStructField param1 = prototype.GetField<PrototypeRHStructField>((StringId)10037820194166150937);
+            PrototypeRHStructField param2 = prototype.GetField<PrototypeRHStructField>((StringId)415043287142635290);
+            PrototypeRHStructField param3 = prototype.GetField<PrototypeRHStructField>((StringId)14512998463866935067);
+            PrototypePrototypeField prop = prototype.GetField<PrototypePrototypeField>((StringId)12156279659329492632);
+
+            if (prop.Value == PrototypeId.Invalid)
+                return "!PropError!";
+
+            return string.Format("{0}({1},{2},{3},{4})",
+                prop?.Value.GetNameFormatted(),
+                param0?.IsNull == false ? TryBuildExpressionString(param0.Value) : "",
+                param1?.IsNull == false ? TryBuildExpressionString(param1.Value) : "",
+                param2?.IsNull == false ? TryBuildExpressionString(param2.Value) : "",
+                param3?.IsNull == false ? TryBuildExpressionString(param3.Value) : "");
         }
 
         private static string BuildLoadBoolString(Prototype prototype)
@@ -140,6 +232,67 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
         {
             PrototypeDoubleField value = prototype.GetField<PrototypeDoubleField>((StringId)529678382596428461);
             return $"{value?.Value}";
+        }
+
+        private static string BuildLoadCurveString(Prototype prototype)
+        {
+            // CurveRef evals use different blueprints, so we can't use field id here
+            PrototypeCurveField curve = null;
+            PrototypeRHStructField index = null;
+            if (prototype.FieldGroups.Count > 0)
+            {
+                foreach (PrototypeField field in prototype.FieldGroups[0].SimpleFields)
+                {
+                    if (field is PrototypeCurveField curveField)
+                        curve = curveField;
+                    else if (field is PrototypeRHStructField rhStructField)
+                        index = rhStructField;
+                }
+            }
+
+            return string.Format("( {0}[{1}] )",
+                curve?.Value.GetName(),
+                index?.IsNull == false ? TryBuildExpressionString(index.Value) : "NULL");
+        }
+
+        private static string BuildLoadAssetRefString(Prototype prototype)
+        {
+            // AssetRef evals use different blueprints, so we can't use field id here
+            PrototypeAssetField value = null;
+            if (prototype.FieldGroups.Count > 0)
+            {
+                PrototypeFieldGroup fieldGroup = prototype.FieldGroups[0];
+                if (fieldGroup.SimpleFields.Count > 0)
+                    value = fieldGroup.SimpleFields[0] as PrototypeAssetField;
+            }
+
+            return $"({value?.Value.GetName()})";
+        }
+
+        private static string BuildLoadProtoRefString(Prototype prototype)
+        {
+            // ProtoRef evals use different blueprints, so we can't use field id here
+            PrototypePrototypeField value = null;
+            if (prototype.FieldGroups.Count > 0)
+            {
+                PrototypeFieldGroup fieldGroup = prototype.FieldGroups[0];
+                if (fieldGroup.SimpleFields.Count > 0)
+                    value = fieldGroup.SimpleFields[0] as PrototypePrototypeField;
+            }
+
+            return $"({value?.Value.GetName()})";
+        }
+
+        private static string BuildLoadContextIntString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)15292182156351116751);
+            return $"(context<int>[{context.Value.GetName()}])";
+        }
+
+        private static string BuildLoadContextProtoRefString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)14584050640904525813);
+            return $"(context<protoref>[{context.Value.GetName()}])";
         }
 
         private static string BuildAddString(Prototype prototype)
@@ -308,6 +461,22 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             return string.Format("Modulus({0}, {1})",
                 arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
                 arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildRandomFloatString(Prototype prototype)
+        {
+            PrototypeDoubleField max = prototype.GetField<PrototypeDoubleField>((StringId)1361918609779724635);
+            PrototypeDoubleField min = prototype.GetField<PrototypeDoubleField>((StringId)1434989627120423257);
+
+            return $"RandFloat( {min?.Value}:{max?.Value} )";
+        }
+
+        private static string BuildRandomIntString(Prototype prototype)
+        {
+            PrototypeLongField max = prototype.GetField<PrototypeLongField>((StringId)14128613522519560336);
+            PrototypeLongField min = prototype.GetField<PrototypeLongField>((StringId)14203915139715371150);
+
+            return $"RandInt( {min?.Value}:{max?.Value} )";
         }
     }
 }
