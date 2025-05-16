@@ -105,6 +105,11 @@ namespace OpenCalligraphy.Core.GameData
             return PrototypeRefManager.GetReferenceName(prototypeId);
         }
 
+        public static string GetFormattedPrototypeName(PrototypeId prototypeId)
+        {
+            return Path.GetFileNameWithoutExtension(GetPrototypeName(prototypeId));
+        }
+
         #endregion
     }
 }

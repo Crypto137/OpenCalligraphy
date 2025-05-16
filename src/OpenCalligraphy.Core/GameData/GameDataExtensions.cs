@@ -64,6 +64,14 @@ namespace OpenCalligraphy.Core.GameData
         }
 
         /// <summary>
+        /// Returns the formatted name of this <see cref="PrototypeId"/> (just the file name instead of the whole path).
+        /// </summary>
+        public static string GetNameFormatted(this PrototypeId prototypeId)
+        {
+            return GameDatabase.GetFormattedPrototypeName(prototypeId);
+        }
+
+        /// <summary>
         /// Returns the name of this <see cref="StringId"/>.
         /// </summary>
         public static string GetName(this StringId stringId)

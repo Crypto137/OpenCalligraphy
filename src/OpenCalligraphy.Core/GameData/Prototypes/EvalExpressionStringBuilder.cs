@@ -75,6 +75,7 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             return DataDirectory.Instance.GetPrototypeRuntimeBinding(protoRef) switch
             {
                 "AssignPropPrototype"           => BuildAssignPropString(prototype),
+                "LoadPropPrototype"             => BuildLoadPropString(prototype),
                 "LoadBoolPrototype"             => BuildLoadBoolString(prototype),
                 "LoadIntPrototype"              => BuildLoadIntString(prototype),
                 "LoadFloatPrototype"            => BuildLoadFloatString(prototype),
@@ -111,6 +112,16 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             return string.Format("{0} = {1}",
                 string.IsNullOrWhiteSpace(propertyName) == false ? propertyName : "!PropError!",
                 eval.IsNull == false ? TryBuildExpressionString(eval.Value) : "NULL");
+        }
+
+        private static string BuildLoadPropString(Prototype prototype)
+        {
+            PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)5836910736336360044);
+
+            if (prop.IsNull)
+                return "!PropError!";
+
+            return PropertyHelper.BuildPropertyName(prop.Value);
         }
 
         private static string BuildLoadBoolString(Prototype prototype)
