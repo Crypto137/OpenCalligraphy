@@ -74,20 +74,28 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
 
             return DataDirectory.Instance.GetPrototypeRuntimeBinding(protoRef) switch
             {
-                "AssignPropPrototype"       => BuildAssignPropString(prototype),
-                "LoadBoolPrototype"         => BuildLoadBoolString(prototype),
-                "LoadIntPrototype"          => BuildLoadIntString(prototype),
-                "LoadFloatPrototype"        => BuildLoadFloatString(prototype),
-                "AddPrototype"              => BuildAddString(prototype),
-                "SubPrototype"              => BuildSubString(prototype),
-                "MultPrototype"             => BuildMultString(prototype),
-                "DivPrototype"              => BuildDivString(prototype),
-                "ExponentPrototype"         => BuildExponentString(prototype),
-                "ScopePrototype"            => BuildScopeString(prototype),
-                "MaxPrototype"              => BuildMaxString(prototype),
-                "MinPrototype"              => BuildMinString(prototype),
-                "ModulusPrototype"          => BuildModulusString(prototype),
-                _                           => runtimeBinding,
+                "AssignPropPrototype"           => BuildAssignPropString(prototype),
+                "LoadBoolPrototype"             => BuildLoadBoolString(prototype),
+                "LoadIntPrototype"              => BuildLoadIntString(prototype),
+                "LoadFloatPrototype"            => BuildLoadFloatString(prototype),
+                "AddPrototype"                  => BuildAddString(prototype),
+                "SubPrototype"                  => BuildSubString(prototype),
+                "MultPrototype"                 => BuildMultString(prototype),
+                "DivPrototype"                  => BuildDivString(prototype),
+                "ExponentPrototype"             => BuildExponentString(prototype),
+                "ScopePrototype"                => BuildScopeString(prototype),
+                "GreaterThanPrototype"          => BuildGreaterThanString(prototype),
+                "LessThanPrototype"             => BuildLessThanString(prototype),
+                "EqualsPrototype"               => BuildEqualsString(prototype),
+                "AndPrototype"                  => BuildAndString(prototype),
+                "OrPrototype"                   => BuildOrString(prototype),
+                "NotPrototype"                  => BuildNotString(prototype),
+                "IsContextDataNullPrototype"    => BuildIsContextDataNullString(prototype),
+                "IfElsePrototype"               => BuildIfElseString(prototype),
+                "MaxPrototype"                  => BuildMaxString(prototype),
+                "MinPrototype"                  => BuildMinString(prototype),
+                "ModulusPrototype"              => BuildModulusString(prototype),
+                _                               => runtimeBinding,
             };
         }
 
@@ -185,6 +193,80 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 sb.Append($" {TryBuildExpressionString(scopeEval)};");
             sb.Append(" }");
             return sb.ToString();
+        }
+
+        private static string BuildGreaterThanString(Prototype prototype)
+        {
+            PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)11273703554902987780);
+            PrototypeRHStructField arg2 = prototype.GetField<PrototypeRHStructField>((StringId)1367750975788749829);
+
+            return string.Format("( {0} > {1} )",
+                arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
+                arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildLessThanString(Prototype prototype)
+        {
+            PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)16237043773489681105);
+            PrototypeRHStructField arg2 = prototype.GetField<PrototypeRHStructField>((StringId)8059920147828839122);
+
+            return string.Format("( {0} < {1} )",
+                arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
+                arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildEqualsString(Prototype prototype)
+        {
+            PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)15791870850691043834);
+            PrototypeRHStructField arg2 = prototype.GetField<PrototypeRHStructField>((StringId)6172457332557025787);
+
+            return string.Format("( {0} == {1} )",
+                arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
+                arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildAndString(Prototype prototype)
+        {
+            PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)10609521103735034018);
+            PrototypeRHStructField arg2 = prototype.GetField<PrototypeRHStructField>((StringId)2140213507217100963);
+
+            return string.Format("( {0} && {1} )",
+                arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
+                arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildOrString(Prototype prototype)
+        {
+            PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)5475568539328319568);
+            PrototypeRHStructField arg2 = prototype.GetField<PrototypeRHStructField>((StringId)14227477536450809937);
+
+            return string.Format("( {0} || {1} )",
+                arg1.IsNull == false ? TryBuildExpressionString(arg1.Value) : "NULL",
+                arg2.IsNull == false ? TryBuildExpressionString(arg2.Value) : "NULL");
+        }
+
+        private static string BuildNotString(Prototype prototype)
+        {
+            PrototypeRHStructField arg = prototype.GetField<PrototypeRHStructField>((StringId)14474736566046494863);
+            return $"!({(arg.IsNull == false ? TryBuildExpressionString(arg.Value) : "NULL")})";
+        }
+
+        private static string BuildIsContextDataNullString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)9049147607101872191);
+            return $"IsNULL({context.Value.GetName()})";
+        }
+
+        private static string BuildIfElseString(Prototype prototype)
+        {
+            PrototypeRHStructField conditional = prototype.GetField<PrototypeRHStructField>((StringId)13051207476210046146);
+            PrototypeRHStructField evalIf = prototype.GetField<PrototypeRHStructField>((StringId)14714292053604897445);
+            PrototypeRHStructField evalElse = prototype.GetField<PrototypeRHStructField>((StringId)13038506646993245055);
+
+            return string.Format("( {0} ? {1} : {2} )",
+                conditional?.IsNull == false ? TryBuildExpressionString(conditional.Value) : "NULL",
+                evalIf?.IsNull == false ? TryBuildExpressionString(evalIf.Value) : "NULL",
+                evalElse?.IsNull == false ? TryBuildExpressionString(evalElse.Value) : "NULL");
         }
 
         private static string BuildMaxString(Prototype prototype)
