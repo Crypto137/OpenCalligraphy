@@ -54,16 +54,8 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
         {
             @params.Fill(new());
 
-            Stack<Prototype> prototypeStack = new();
-            while (prototype != null)
+            foreach (Prototype currentPrototype in prototype.IterateHierarchy())
             {
-                prototypeStack.Push(prototype);
-                prototype = GameDatabase.GetPrototype(prototype.ParentDataRef);
-            }
-
-            while (prototypeStack.Count > 0)
-            {
-                Prototype currentPrototype = prototypeStack.Pop();
                 if (currentPrototype.FieldGroups.Count == 0)
                     continue;
 

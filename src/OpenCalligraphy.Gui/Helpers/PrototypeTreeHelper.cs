@@ -40,24 +40,14 @@ namespace OpenCalligraphy.Gui.Helpers
             if (prototype.DataRef == PrototypeId.Invalid && prototype.FieldGroups.Count == 0 && prototype.ParentDataRef != PrototypeId.Invalid)
                 root.Tag = new DataRefTreeNodeTag(prototype.ParentDataRef);
 
-            // Push this prototype and all of its parents to a stack
-            Stack<Prototype> prototypeStack = new();
-            while (prototype != null)
-            {
-                prototypeStack.Push(prototype);
-                prototype = GameDatabase.GetPrototype(prototype.ParentDataRef);
-            }
-
             // Load the default data from the top parent and apply overrides from all of its children
             Dictionary<FieldGroupKey, TreeNode> fieldGroupNodes = new();
             Dictionary<FieldKey, TreeNode> fieldNodes = new();
 
-            while (prototypeStack.Count > 0)
+            foreach (Prototype currentPrototype in prototype.IterateHierarchy())
             {
-                Prototype currentPrototype = prototypeStack.Pop();
-
                 // Highlight fields overriden by the last child (the prototype we want to inspecting)
-                bool highlightFields = prototypeStack.Count == 0 && currentPrototype.ParentDataRef != PrototypeId.Invalid;
+                bool highlightFields = currentPrototype == prototype && currentPrototype.ParentDataRef != PrototypeId.Invalid;
 
                 foreach (PrototypeFieldGroup fieldGroup in currentPrototype.OrderBy(fieldGroup => fieldGroup.DeclaringBlueprintId.GetName()))
                 {

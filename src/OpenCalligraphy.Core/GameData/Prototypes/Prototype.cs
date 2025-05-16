@@ -31,7 +31,6 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             return _fieldGroups.GetEnumerator();
         }
 
-
         IEnumerator<PrototypeFieldGroup> IEnumerable<PrototypeFieldGroup>.GetEnumerator()
         {
             return GetEnumerator();
@@ -40,6 +39,24 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Iterates all prototypes in hierarchy from the top parent to this instance.
+        /// </summary>
+        public IEnumerable<Prototype> IterateHierarchy()
+        {
+            Stack<Prototype> prototypeStack = new();
+
+            Prototype prototype = this;
+            while (prototype != null)
+            {
+                prototypeStack.Push(prototype);
+                prototype = GameDatabase.GetPrototype(prototype.ParentDataRef);
+            }
+
+            while (prototypeStack.Count > 0)
+                yield return prototypeStack.Pop();
         }
 
         public void ParseFrom(BinaryReader reader)

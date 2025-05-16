@@ -239,9 +239,13 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             // CurveRef evals use different blueprints, so we can't use field id here
             PrototypeCurveField curve = null;
             PrototypeRHStructField index = null;
-            if (prototype.FieldGroups.Count > 0)
+
+            foreach (Prototype currentPrototype in prototype.IterateHierarchy())
             {
-                foreach (PrototypeField field in prototype.FieldGroups[0].SimpleFields)
+                if (currentPrototype.FieldGroups.Count == 0)
+                    continue;
+
+                foreach (PrototypeField field in currentPrototype.FieldGroups[0].SimpleFields)
                 {
                     if (field is PrototypeCurveField curveField)
                         curve = curveField;
