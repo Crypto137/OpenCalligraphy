@@ -104,11 +104,26 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 "NotPrototype"                  => BuildNotString(prototype),
                 "IsContextDataNullPrototype"    => BuildIsContextDataNullString(prototype),
                 "IfElsePrototype"               => BuildIfElseString(prototype),
+                "DifficultyTierRangePrototype"  => BuildDifficultyTierRangeString(prototype),
+                "MissionIsActivePrototype"      => BuildMissionIsActiveString(prototype),
+                "GetCombatLevelPrototype"       => BuildGetCombatLevelString(prototype),
+                "GetPowerRankPrototype"         => BuildGetPowerRankString(prototype),
+                "CalcPowerRankPrototype"        => BuildCalcPowerRankString(prototype),
+                "GetDamageReductionPctPrototype"=> BuildGetDamageReductionPctString(prototype),
+                "GetDistanceToEntityPrototype"  => BuildGetDistanceToEntityString(prototype),
+                "HasEntityInInventoryPrototype" => BuildHasEntityInInventoryString(prototype),
+                "IsInPartyPrototype"            => BuildIsInPartyString(prototype),
+                "IsDynamicCombatLevelEnabledPrototype" => BuildIsDynamicCombatLevelEnabledString(prototype),
+                "MissionIsCompletePrototype"    => BuildMissionIsCompleteString(prototype),
                 "MaxPrototype"                  => BuildMaxString(prototype),
                 "MinPrototype"                  => BuildMinString(prototype),
                 "ModulusPrototype"              => BuildModulusString(prototype),
                 "RandomFloatPrototype"          => BuildRandomFloatString(prototype),
                 "RandomIntPrototype"            => BuildRandomIntString(prototype),
+                "LoadEntityToContextVarPrototype"           => BuildLoadEntityToContextVarString(prototype),
+                "LoadConditionCollectionToContextPrototype" => BuildLoadConditionCollectionToContextString(prototype),
+                "EntityHasKeywordPrototype"     => BuildEntityHasKeywordString(prototype),
+                "EntityHasTalentPrototype"      => BuildEntityHasTalentString(prototype),
                 _                               => runtimeBinding,
             };
         }
@@ -437,6 +452,93 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 evalElse?.IsNull == false ? TryBuildExpressionString(evalElse.Value) : "NULL");
         }
 
+        private static string BuildDifficultyTierRangeString(Prototype prototype)
+        {
+            PrototypePrototypeField min = prototype.GetField<PrototypePrototypeField>((StringId)15616826765656332092);
+            PrototypePrototypeField max = prototype.GetField<PrototypePrototypeField>((StringId)15687875368797738814);
+
+            return string.Format("DifficultyTier( {0},{1} )",
+                GameDatabase.GetPrototypeName(min.Value),
+                GameDatabase.GetPrototypeName(max.Value));
+        }
+
+        private static string BuildMissionIsActiveString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)12081102133055133539);
+            PrototypePrototypeField mission = prototype.GetField<PrototypePrototypeField>((StringId)5241103067609110368);
+
+            return $"MissionIsActive(Context=[{context.Value.GetName()}], Mission=[{mission.Value.GetName()}])";
+        }
+
+        private static string BuildGetCombatLevelString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)6818686758998709234);
+
+            return $"GetCombatLevel(Context=[{context.Value.GetName()}])";
+        }
+
+        private static string BuildGetPowerRankString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)6015239222172848957);
+            PrototypePrototypeField power = prototype.GetField<PrototypePrototypeField>((StringId)18217021394257252965);
+
+            return $"GetPowerRank(Context=[{context.Value.GetName()}], Power=[{power.Value.GetName()}]))";
+        }
+
+        private static string BuildCalcPowerRankString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)1503743095844377488);
+            PrototypePrototypeField power = prototype.GetField<PrototypePrototypeField>((StringId)7866794245806559928);
+
+            return $"CalcPowerRank(Context=[{context.Value.GetName()}], Power=[{power.Value.GetName()}])";
+        }
+
+        private static string BuildGetDamageReductionPctString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)3313504581961848535);
+            PrototypeAssetField vsDamageType = prototype.GetField<PrototypeAssetField>((StringId)17517379456729684188);
+
+            return $"GetDamageReductionPct(Context=[{context.Value.GetName()}], VsDamageType=[{vsDamageType.Value.GetName()}])";
+        }
+
+        private static string BuildGetDistanceToEntityString(Prototype prototype)
+        {
+            PrototypeAssetField sourceEntity = prototype.GetField<PrototypeAssetField>((StringId)3496010323655989336);
+            PrototypeAssetField targetEntity = prototype.GetField<PrototypeAssetField>((StringId)449336544503863374);
+            PrototypeBooleanField edgeToEdge = prototype.GetField<PrototypeBooleanField>((StringId)2969600873078789943);
+
+            return $"GetDistanceToEntity(SourceEntity=[{sourceEntity.Value.GetName()}], TargetEntity=[{targetEntity.Value.GetName()}], EdgeToEdge=[{edgeToEdge.Value}])";
+        }
+
+        private static string BuildHasEntityInInventoryString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)12301922136390703527);
+            PrototypePrototypeField entity = prototype.GetField<PrototypePrototypeField>((StringId)6560550995882481983);
+            PrototypeAssetField inventory = prototype.GetField<PrototypeAssetField>((StringId)5061914273438833296);
+
+            return $"HasEntityInInventory(Context=[{context.Value.GetName()}], Entity=[{entity.Value.GetName()}], Inventory=[{inventory.Value.GetName()}])";
+        }
+
+        private static string BuildIsInPartyString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)4289541947466584583);
+
+            return $"IsInParty(Context=[{context.Value.GetName()}])";
+        }
+
+        private static string BuildIsDynamicCombatLevelEnabledString(Prototype prototype)
+        {
+            return "IsDynamicCombatLevelEnabled";
+        }
+
+        private static string BuildMissionIsCompleteString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)5539123959986526272);
+            PrototypePrototypeField mission = prototype.GetField<PrototypePrototypeField>((StringId)11802381004313729085);
+
+            return $"MissionIsComplete(Context=[{context.Value.GetName()}], Mission=[{mission.Value.GetName()}])";
+        }
+
         private static string BuildMaxString(Prototype prototype)
         {
             PrototypeRHStructField arg1 = prototype.GetField<PrototypeRHStructField>((StringId)1044928077854739800);
@@ -481,6 +583,42 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             PrototypeLongField min = prototype.GetField<PrototypeLongField>((StringId)14203915139715371150);
 
             return $"RandInt( {min?.Value}:{max?.Value} )";
+        }
+
+        private static string BuildLoadEntityToContextVarString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)5086034854013376402);
+            PrototypeRHStructField entityId = prototype.GetField<PrototypeRHStructField>((StringId)12794225760199710711);
+
+            return $"LoadEntityToContextVar(Context=[{context.Value.GetName()}], EntityId={{{(entityId?.IsNull == false ? TryBuildExpressionString(entityId.Value) : "!NULL Eval!")}}})";
+        }
+
+        private static string BuildLoadConditionCollectionToContextString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)5997074086943529887);
+            PrototypeRHStructField entityId = prototype.GetField<PrototypeRHStructField>((StringId)11572737069862558724);
+
+            return $"LoadConditionCollectionToContext(Context=[{context.Value.GetName()}], EntityId={{{(entityId?.IsNull == false ? TryBuildExpressionString(entityId.Value) : "!NULL Eval!")}}})";
+        }
+
+        private static string BuildEntityHasKeywordString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)1819350896079410434);
+            PrototypePrototypeField keyword = prototype.GetField<PrototypePrototypeField>((StringId)1147453762849936642);
+
+            PrototypeId keywordProtoRef = keyword != null ? keyword.Value : PrototypeId.Invalid;
+
+            return $"EntityHasKeyword(Context=[{context.Value.GetName()}], Keyword={{{(keywordProtoRef != PrototypeId.Invalid ? keywordProtoRef.GetName() : "!NONE!")}}})";
+        }
+
+        private static string BuildEntityHasTalentString(Prototype prototype)
+        {
+            PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)2600775360028611717);
+            PrototypePrototypeField talent = prototype.GetField<PrototypePrototypeField>((StringId)18228789889448023048);
+
+            PrototypeId talentProtoRef = talent != null ? talent.Value : PrototypeId.Invalid;
+
+            return $"EntityHasTalent(Context=[{context.Value.GetName()}], Talent={{{(talentProtoRef != PrototypeId.Invalid ? talentProtoRef.GetName() : "!NONE!")}}})";
         }
     }
 }
