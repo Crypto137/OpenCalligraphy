@@ -83,21 +83,24 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             }
         }
 
-        public T GetField<T>(StringId fieldId, int fieldGroupIndex = 0) where T: PrototypeField
+        /// <summary>
+        /// Searches this <see cref="Prototype"/> and its parents for the field with the specified <see cref="StringId"/>.
+        /// </summary>
+        public T GetField<T>(StringId fieldId) where T: PrototypeField
         {
-            if (fieldGroupIndex < 0 || fieldGroupIndex >= FieldGroups.Count)
-                return null;
+            // Search this prototype
+            foreach (PrototypeFieldGroup fieldGroup in _fieldGroups)
+            {
+                T field = fieldGroup.GetField<T>(fieldId);
+                if (field != null)
+                    return field;
+            }
 
-            PrototypeFieldGroup fieldGroup = FieldGroups[fieldGroupIndex];
+            // Search parent if not found
+            if (ParentDataRef != PrototypeId.Invalid)
+                return ParentDataRef.AsPrototype()?.GetField<T>(fieldId);
 
-            Type fieldType = typeof(T);
-
-            if (fieldType.IsAssignableTo(typeof(PrototypeSimpleField)))
-                return fieldGroup.GetSimpleField<T>(fieldId);
-            
-            if (fieldType.IsAssignableTo(typeof(PrototypeListField)))
-                return fieldGroup.GetListField<T>(fieldId);
-
+            // Not found and no parents to search
             return null;
         }
     }

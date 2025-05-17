@@ -64,6 +64,9 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
 
         public static string TryBuildExpressionString(Prototype prototype)
         {
+            if (prototype == null)
+                return string.Empty;
+
             PrototypeId protoRef = prototype.ParentDataRef != PrototypeId.Invalid ? prototype.ParentDataRef : prototype.DataRef;
             string runtimeBinding = DataDirectory.Instance.GetPrototypeRuntimeBinding(protoRef);
             if (EvalPrototypes.Contains(runtimeBinding) == false)
@@ -120,6 +123,9 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
                 "ModulusPrototype"              => BuildModulusString(prototype),
                 "RandomFloatPrototype"          => BuildRandomFloatString(prototype),
                 "RandomIntPrototype"            => BuildRandomIntString(prototype),
+                "ForPrototype"                  => BuildForString(prototype),
+                "ForEachConditionInContextPrototype"        => BuildForEachConditionInContextString(prototype),
+                "ForEachProtoRefInContextRefListPrototype"  => BuildForEachProtoRefInContextRefListString(prototype),
                 "LoadEntityToContextVarPrototype"           => BuildLoadEntityToContextVarString(prototype),
                 "LoadConditionCollectionToContextPrototype" => BuildLoadConditionCollectionToContextString(prototype),
                 "EntityHasKeywordPrototype"     => BuildEntityHasKeywordString(prototype),
@@ -206,7 +212,7 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             PrototypeRHStructField prop = prototype.GetField<PrototypeRHStructField>((StringId)11493498445115496437);
             PrototypeAssetField propertyIdContext = prototype.GetField<PrototypeAssetField>((StringId)17065615538570403211);
 
-            if (prop.IsNull)
+            if (prop?.IsNull != false)
                 return "!PropError!";
 
             return $"{PropertyHelper.BuildPropertyName(prop.Value)}(<PropColContext[{propertyCollectionContext.Value.GetName()}], PropIdContext[{propertyIdContext.Value.GetName()}]>)";
@@ -523,7 +529,7 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
         {
             PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)4289541947466584583);
 
-            return $"IsInParty(Context=[{context.Value.GetName()}])";
+            return $"IsInParty(Context=[{context?.Value.GetName()}])";
         }
 
         private static string BuildIsDynamicCombatLevelEnabledString(Prototype prototype)
@@ -536,7 +542,7 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             PrototypeAssetField context = prototype.GetField<PrototypeAssetField>((StringId)5539123959986526272);
             PrototypePrototypeField mission = prototype.GetField<PrototypePrototypeField>((StringId)11802381004313729085);
 
-            return $"MissionIsComplete(Context=[{context.Value.GetName()}], Mission=[{mission.Value.GetName()}])";
+            return $"MissionIsComplete(Context=[{context?.Value.GetName()}], Mission=[{mission?.Value.GetName()}])";
         }
 
         private static string BuildMaxString(Prototype prototype)
@@ -583,6 +589,79 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             PrototypeLongField min = prototype.GetField<PrototypeLongField>((StringId)14203915139715371150);
 
             return $"RandInt( {min?.Value}:{max?.Value} )";
+        }
+
+        private static string BuildForString(Prototype prototype)
+        {
+            PrototypeRHStructField loopAdvance = prototype.GetField<PrototypeRHStructField>((StringId)464918372468069257);
+            PrototypeRHStructField loopCondition = prototype.GetField<PrototypeRHStructField>((StringId)16347999830862337150);
+            PrototypeRHStructField loopVarInt = prototype.GetField<PrototypeRHStructField>((StringId)16347999830862337150);
+            PrototypeRHStructField postLoop = prototype.GetField<PrototypeRHStructField>((StringId)18002664979617878653);
+            PrototypeRHStructField preLoop = prototype.GetField<PrototypeRHStructField>((StringId)16968961987179647486);
+            PrototypeRHStructListField scopeLoopBody = prototype.GetField<PrototypeRHStructListField>((StringId)9845531091176854655);
+
+            StringBuilder sb = new();
+            if (scopeLoopBody != null)
+            {
+                foreach (Prototype evalProto in scopeLoopBody.Values)
+                    sb.Append($" {TryBuildExpressionString(evalProto)};");
+            }
+
+            return string.Format("{{ Pre({0}) For ({1}; {2}; {3}) {{{4}}} Post({5}) }}",
+                TryBuildExpressionString(preLoop?.Value),
+                TryBuildExpressionString(loopVarInt?.Value),
+                TryBuildExpressionString(loopCondition?.Value),
+                TryBuildExpressionString(loopAdvance?.Value),
+                sb.ToString(),
+                TryBuildExpressionString(postLoop?.Value));
+        }
+
+        private static string BuildForEachConditionInContextString(Prototype prototype)
+        {
+            PrototypeRHStructField postLoop = prototype.GetField<PrototypeRHStructField>((StringId)942252983869053873);
+            PrototypeRHStructField preLoop = prototype.GetField<PrototypeRHStructField>((StringId)18020870319133367090);
+            PrototypeRHStructListField scopeLoopBody = prototype.GetField<PrototypeRHStructListField>((StringId)3066765847814020531);
+            PrototypeRHStructField loopConditionPreScope = prototype.GetField<PrototypeRHStructField>((StringId)16379843999176401171);
+            PrototypeRHStructField loopConditionPostScope = prototype.GetField<PrototypeRHStructField>((StringId)17173466570655474066);
+            PrototypeAssetField conditionCollectionContext = prototype.GetField<PrototypeAssetField>((StringId)17264143460089471785);
+
+            StringBuilder sb = new();
+            if (scopeLoopBody != null)
+            {
+                foreach (Prototype evalProto in scopeLoopBody.Values)
+                    sb.Append($" {TryBuildExpressionString(evalProto)};");
+            }
+
+            return string.Format("{{ Pre({0}) Foreach (Condition in context [{1}], LoopCondition={{{2}}}) {{{3} if(LoopConditionPostScope{{{4}}}){{break}}}} Post({5}) }}",
+                TryBuildExpressionString(preLoop?.Value),
+                conditionCollectionContext?.Value.GetName(),
+                TryBuildExpressionString(loopConditionPreScope?.Value),
+                sb.ToString(),
+                TryBuildExpressionString(loopConditionPostScope?.Value),
+                TryBuildExpressionString(postLoop?.Value));
+        }
+
+        private static string BuildForEachProtoRefInContextRefListString(Prototype prototype)
+        {
+            PrototypeRHStructField postLoop = prototype.GetField<PrototypeRHStructField>((StringId)2898157917894286932);
+            PrototypeRHStructField preLoop = prototype.GetField<PrototypeRHStructField>((StringId)13697983732985765333);
+            PrototypeRHStructListField scopeLoopBody = prototype.GetField<PrototypeRHStructListField>((StringId)16346171716582645846);
+            PrototypeRHStructField loopCondition = prototype.GetField<PrototypeRHStructField>((StringId)9846238725589901397);
+            PrototypeAssetField protoRefListContext = prototype.GetField<PrototypeAssetField>((StringId)7876936674123064070);
+
+            StringBuilder sb = new();
+            if (scopeLoopBody != null)
+            {
+                foreach (Prototype evalProto in scopeLoopBody.Values)
+                    sb.Append($" {TryBuildExpressionString(evalProto)};");
+            }
+
+            return string.Format("{{ Pre({0}) Foreach (ProtoRef in context [{1}], LoopCondition={{{2}}}) {{{3}}} Post({4}) }}",
+                TryBuildExpressionString(preLoop?.Value),
+                protoRefListContext?.Value.GetName(),
+                TryBuildExpressionString(loopCondition?.Value),
+                sb.ToString(),
+                TryBuildExpressionString(postLoop?.Value));
         }
 
         private static string BuildLoadEntityToContextVarString(Prototype prototype)

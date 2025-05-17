@@ -53,23 +53,23 @@
             }
         }
 
-        public T GetSimpleField<T>(StringId fieldId) where T: PrototypeField
+        public T GetField<T>(StringId fieldId) where T: PrototypeField
         {
-            foreach (PrototypeField field in _simpleFields)
-            {
-                if (field.FieldId == fieldId)
-                    return field as T;
-            }
+            Type fieldType = typeof(T);
 
-            return null;
-        }
+            List<PrototypeField> fieldList = null;
+            if (fieldType.IsAssignableTo(typeof(PrototypeSimpleField)))
+                fieldList = _simpleFields;
+            else if (fieldType.IsAssignableTo(typeof(PrototypeListField)))
+                fieldList = _listFields;
 
-        public T GetListField<T>(StringId fieldId) where T: PrototypeField
-        {
-            foreach (PrototypeField field in _listFields)
+            if (fieldList != null)
             {
-                if (field.FieldId == fieldId)
-                    return field as T;
+                foreach (PrototypeField field in fieldList)
+                {
+                    if (field.FieldId == fieldId)
+                        return field as T;
+                }
             }
 
             return null;
