@@ -27,7 +27,7 @@ namespace OpenCalligraphy.Gui.Forms
 
             // TODO: Save settings
             SetPrototypeMetadataToggle(false);
-            SetEvalExpressionStringToggle(false);
+            SetEvalExpressionStringToggle(true);
         }
 
         #region Data Logic
