@@ -42,6 +42,7 @@
             viewToolStripMenuItem = new ToolStripMenuItem();
             showAdditionalPrototypeMetadataToolStripMenuItem = new ToolStripMenuItem();
             showEvalExpressionStringsToolStripMenuItem = new ToolStripMenuItem();
+            embedEmptyRHStructsToolStripMenuItem = new ToolStripMenuItem();
             localeToolStripMenuItem = new ToolStripMenuItem();
             loadLocaleToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -174,7 +175,7 @@
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { showAdditionalPrototypeMetadataToolStripMenuItem, showEvalExpressionStringsToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { showAdditionalPrototypeMetadataToolStripMenuItem, showEvalExpressionStringsToolStripMenuItem, embedEmptyRHStructsToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "View";
@@ -192,6 +193,13 @@
             showEvalExpressionStringsToolStripMenuItem.Size = new Size(269, 22);
             showEvalExpressionStringsToolStripMenuItem.Text = "Show Eval Expression Strings";
             showEvalExpressionStringsToolStripMenuItem.Click += showEvalExpressionStringsToolStripMenuItem_Click;
+            // 
+            // embedEmptyRHStructsToolStripMenuItem
+            // 
+            embedEmptyRHStructsToolStripMenuItem.Name = "embedEmptyRHStructsToolStripMenuItem";
+            embedEmptyRHStructsToolStripMenuItem.Size = new Size(269, 22);
+            embedEmptyRHStructsToolStripMenuItem.Text = "Embed Empty RHStructs";
+            embedEmptyRHStructsToolStripMenuItem.Click += embedEmptyRHStructsToolStripMenuItem_Click;
             // 
             // localeToolStripMenuItem
             // 
@@ -814,5 +822,6 @@
         private ToolStripMenuItem exportPrototypeClassesToolStripMenuItem;
         private ToolStripMenuItem exportLocaleToolStripMenuItem;
         private ToolStripMenuItem showEvalExpressionStringsToolStripMenuItem;
+        private ToolStripMenuItem embedEmptyRHStructsToolStripMenuItem;
     }
 }

@@ -11,6 +11,7 @@ namespace OpenCalligraphy.Gui.Helpers
     {
         None                        = 0,
         UseEvalExpressionStrings    = 1 << 0,
+        EmbedEmptyRHStructs         = 1 << 1,
     }
 
     /// <summary>
@@ -38,7 +39,11 @@ namespace OpenCalligraphy.Gui.Helpers
 
             // If this is an empty RHStruct, treat it as a data ref
             if (prototype.DataRef == PrototypeId.Invalid && prototype.FieldGroups.Count == 0 && prototype.ParentDataRef != PrototypeId.Invalid)
+            {
                 root.Tag = new DataRefTreeNodeTag(prototype.ParentDataRef);
+                if (flags.HasFlag(PrototypeTreeHelperFlags.EmbedEmptyRHStructs) == false)
+                    return;
+            }
 
             // Load the default data from the top parent and apply overrides from all of its children
             Dictionary<FieldGroupKey, TreeNode> fieldGroupNodes = new();

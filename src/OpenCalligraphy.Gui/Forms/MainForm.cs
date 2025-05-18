@@ -18,16 +18,17 @@ namespace OpenCalligraphy.Gui.Forms
 
         private readonly FileTree _searchFileTree = new("Calligraphy");
 
+        private bool _updatingSettings;
+
         private bool _prototypeMetadataToggle;
         private bool _evalExpressionStringToggle;
+        private bool _embedEmptyRHStructsToggle;
 
         public MainForm()
         {
             InitializeComponent();
 
-            // TODO: Save settings
-            SetPrototypeMetadataToggle(false);
-            SetEvalExpressionStringToggle(true);
+            InitializeSettings();
         }
 
         #region Data Logic
@@ -306,6 +307,9 @@ namespace OpenCalligraphy.Gui.Forms
 
         private void ReloadPrototype()
         {
+            if (_updatingSettings)
+                return;
+
             if (prototypeTreeView.Tag is Prototype prototype)
                 InspectPrototype(prototype, false);
         }
@@ -353,28 +357,6 @@ namespace OpenCalligraphy.Gui.Forms
             prototypeRuntimeBindingTextBox.Text = runtimeBinding;
         }
 
-        private void SetPrototypeMetadataToggle(bool value)
-        {
-            _prototypeMetadataToggle = value;
-
-            prototypeBlueprintLabel.Visible = value;
-            prototypeBlueprintTextBox.Visible = value;
-            prototypeFlagsLabel.Visible = value;
-            prototypeFlagsTextBox.Visible = value;
-            prototypeRuntimeBindingLabel.Visible = value;
-            prototypeRuntimeBindingTextBox.Visible = value;
-
-            showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
-        }
-
-        private void SetEvalExpressionStringToggle(bool value)
-        {
-            _evalExpressionStringToggle = value;
-            showEvalExpressionStringsToolStripMenuItem.Checked = value;
-
-            ReloadPrototype();
-        }
-
         private void PopulatePrototypeTreeView(Prototype prototype)
         {
             prototypeTreeView.BeginUpdate();
@@ -389,6 +371,9 @@ namespace OpenCalligraphy.Gui.Forms
                 PrototypeTreeHelperFlags flags = PrototypeTreeHelperFlags.None;
                 if (_evalExpressionStringToggle)
                     flags |= PrototypeTreeHelperFlags.UseEvalExpressionStrings;
+
+                if (_embedEmptyRHStructsToggle)
+                    flags |= PrototypeTreeHelperFlags.EmbedEmptyRHStructs;
 
                 PrototypeTreeHelper.SetPrototype(root, prototype, prototype?.ToString(), flags);
                 root.Expand();
@@ -527,6 +512,54 @@ namespace OpenCalligraphy.Gui.Forms
 
         #endregion
 
+        #region Settings
+
+        private void InitializeSettings()
+        {
+            // TODO: Save settings
+            _updatingSettings = true;
+
+            SetPrototypeMetadataToggle(false);
+            SetEvalExpressionStringToggle(true);
+            SetEmbedEmptyRHStructsToggle(false);
+
+            _updatingSettings = false;
+
+            ReloadPrototype();
+        }
+
+        private void SetPrototypeMetadataToggle(bool value)
+        {
+            _prototypeMetadataToggle = value;
+
+            prototypeBlueprintLabel.Visible = value;
+            prototypeBlueprintTextBox.Visible = value;
+            prototypeFlagsLabel.Visible = value;
+            prototypeFlagsTextBox.Visible = value;
+            prototypeRuntimeBindingLabel.Visible = value;
+            prototypeRuntimeBindingTextBox.Visible = value;
+
+            showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
+        }
+
+        private void SetEvalExpressionStringToggle(bool value)
+        {
+            _evalExpressionStringToggle = value;
+            showEvalExpressionStringsToolStripMenuItem.Checked = value;
+
+            ReloadPrototype();
+        }
+
+        private void SetEmbedEmptyRHStructsToggle(bool value)
+        {
+            _embedEmptyRHStructsToggle = value;
+            embedEmptyRHStructsToolStripMenuItem.Checked = value;
+
+            ReloadPrototype();
+        }
+
+        #endregion
+
         #region Event Handlers
 
         #region ToolStrip Events
@@ -559,6 +592,11 @@ namespace OpenCalligraphy.Gui.Forms
         private void showEvalExpressionStringsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetEvalExpressionStringToggle(_evalExpressionStringToggle == false);
+        }
+
+        private void embedEmptyRHStructsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetEmbedEmptyRHStructsToggle(_embedEmptyRHStructsToggle == false);
         }
 
         private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)
