@@ -339,7 +339,7 @@ namespace OpenCalligraphy.Gui.Forms
                 PrototypeDataRefRecord dataRefRecord = DataDirectory.Instance.GetPrototypeDataRefRecord(prototype.DataRef);
                 if (dataRefRecord != null)
                 {
-                    name = $"{dataRefRecord.PrototypeId.GetName()} ({dataRefRecord.PrototypeId})";
+                    name = $"{dataRefRecord.PrototypeId.GetName()} (id={dataRefRecord.PrototypeId}, guid={dataRefRecord.PrototypeGuid})";
 
                     if (prototype.ParentDataRef != PrototypeId.Invalid)
                         parent = $"{prototype.ParentDataRef.GetName()} ({prototype.ParentDataRef})";
