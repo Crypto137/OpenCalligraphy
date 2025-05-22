@@ -62,6 +62,7 @@
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
             curveTabPage = new TabPage();
             curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
+            exportCurveToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -96,45 +97,45 @@
             // openPakFileToolStripMenuItem
             // 
             openPakFileToolStripMenuItem.Name = "openPakFileToolStripMenuItem";
-            openPakFileToolStripMenuItem.Size = new Size(152, 22);
+            openPakFileToolStripMenuItem.Size = new Size(180, 22);
             openPakFileToolStripMenuItem.Text = "Open PakFile...";
             openPakFileToolStripMenuItem.Click += openPakFileToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(149, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // exportToolStripMenuItem
             // 
-            exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportPrototypeClassesToolStripMenuItem, exportLocaleToolStripMenuItem });
+            exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportCurveToolStripMenuItem, exportPrototypeClassesToolStripMenuItem, exportLocaleToolStripMenuItem });
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(152, 22);
+            exportToolStripMenuItem.Size = new Size(180, 22);
             exportToolStripMenuItem.Text = "Export";
             // 
             // exportPrototypeClassesToolStripMenuItem
             // 
             exportPrototypeClassesToolStripMenuItem.Name = "exportPrototypeClassesToolStripMenuItem";
-            exportPrototypeClassesToolStripMenuItem.Size = new Size(167, 22);
+            exportPrototypeClassesToolStripMenuItem.Size = new Size(180, 22);
             exportPrototypeClassesToolStripMenuItem.Text = "Prototype Classes";
             exportPrototypeClassesToolStripMenuItem.Click += exportPrototypeClassesToolStripMenuItem_Click;
             // 
             // exportLocaleToolStripMenuItem
             // 
             exportLocaleToolStripMenuItem.Name = "exportLocaleToolStripMenuItem";
-            exportLocaleToolStripMenuItem.Size = new Size(167, 22);
+            exportLocaleToolStripMenuItem.Size = new Size(180, 22);
             exportLocaleToolStripMenuItem.Text = "Locale";
             exportLocaleToolStripMenuItem.Click += exportLocaleToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(149, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(152, 22);
+            exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -372,9 +373,17 @@
             // 
             curveInspectorUserControl.Dock = DockStyle.Fill;
             curveInspectorUserControl.Location = new Point(3, 3);
+            curveInspectorUserControl.MainForm = null;
             curveInspectorUserControl.Name = "curveInspectorUserControl";
             curveInspectorUserControl.Size = new Size(825, 703);
             curveInspectorUserControl.TabIndex = 0;
+            // 
+            // exportCurveToolStripMenuItem
+            // 
+            exportCurveToolStripMenuItem.Name = "exportCurveToolStripMenuItem";
+            exportCurveToolStripMenuItem.Size = new Size(180, 22);
+            exportCurveToolStripMenuItem.Text = "Curve";
+            exportCurveToolStripMenuItem.Click += exportCurveToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -443,5 +452,6 @@
         private UserControls.PrototypeInspectorUserControl prototypeInspectorUserControl;
         private TabPage curveTabPage;
         private UserControls.CurveInspectorUserControl curveInspectorUserControl;
+        private ToolStripMenuItem exportCurveToolStripMenuItem;
     }
 }

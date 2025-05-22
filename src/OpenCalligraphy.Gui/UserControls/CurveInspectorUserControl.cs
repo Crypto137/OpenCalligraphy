@@ -36,6 +36,28 @@ namespace OpenCalligraphy.Gui.UserControls
             InspectCurve(null);
         }
 
+        public void Export()
+        {
+            if (curveDataGridView.Tag is not Curve curve)
+            {
+                MessageBox.Show("Cannot export curve: no curve is selected.", "Curve Inspector", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using SaveFileDialog dialog = new();
+            dialog.FileName = $"{Path.GetFileNameWithoutExtension(curve.ToString())}.tsv";
+            dialog.Filter = "TSV file (*.tsv)|*.tsv|All files (*.*)|*.*";
+
+            DialogResult dialogResult = dialog.ShowDialog(this);
+            if (dialogResult != DialogResult.OK)
+                return;
+
+            string path = dialog.FileName;
+            curve.ExportToTsv(path);
+
+            MessageBox.Show($"Exported curve {curve.Id} to '{path}'.");
+        }
+
         private void EnableCurveControls(Curve curve)
         {
             bool hasCurve = curve != null;

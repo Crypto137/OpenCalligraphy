@@ -375,6 +375,11 @@ namespace OpenCalligraphy.Gui.Forms
             OpenPakFile();
         }
 
+        private void exportCurveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            curveInspectorUserControl.Export();
+        }
+
         private void exportPrototypeClassesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportPrototypeClasses();

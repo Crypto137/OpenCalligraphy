@@ -1,4 +1,7 @@
-﻿using OpenCalligraphy.Core.Logging;
+﻿using System.Globalization;
+using System.Text;
+using OpenCalligraphy.Core.Helpers;
+using OpenCalligraphy.Core.Logging;
 
 namespace OpenCalligraphy.Core.GameData
 {
@@ -57,6 +60,16 @@ namespace OpenCalligraphy.Core.GameData
             position = Math.Clamp(position, MinPosition, MaxPosition);
             int index = position - MinPosition;
             return _values[index];
+        }
+
+        public void ExportToTsv(string path)
+        {
+            StringBuilder sb = new();
+
+            for (int i = 0; i < _values.Length; i++)
+                sb.AppendLine($"{MinPosition + i}\t{_values[i].ToString(CultureInfo.InvariantCulture)}");
+
+            FileHelper.WriteTextFile(path, sb.ToString());
         }
     }
 }

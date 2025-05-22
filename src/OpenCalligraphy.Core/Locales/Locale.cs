@@ -5,6 +5,7 @@ using System.Text.Unicode;
 using OpenCalligraphy.Core.Exceptions;
 using OpenCalligraphy.Core.Extensions;
 using OpenCalligraphy.Core.GameData;
+using OpenCalligraphy.Core.Helpers;
 
 namespace OpenCalligraphy.Core.Locales
 {
@@ -103,12 +104,7 @@ namespace OpenCalligraphy.Core.Locales
         public void ExportToJson(string path)
         {
             string json = JsonSerializer.Serialize(this, JsonOptions);
-
-            string directory = Path.GetDirectoryName(path);
-            if (System.IO.Directory.Exists(directory) == false)
-                System.IO.Directory.CreateDirectory(directory);
-
-            File.WriteAllText(path, json);
+            FileHelper.WriteTextFile(path, json);
         }
 
         private static bool TryParseLegacyLocaleFile(BinaryReader reader, out string[] values)
