@@ -1,4 +1,5 @@
-﻿using OpenCalligraphy.Core.GameData;
+﻿using System.Reflection;
+using OpenCalligraphy.Core.GameData;
 using OpenCalligraphy.Gui.Forms;
 
 namespace OpenCalligraphy.Gui.UserControls
@@ -10,6 +11,11 @@ namespace OpenCalligraphy.Gui.UserControls
         public CurveInspectorUserControl()
         {
             InitializeComponent();
+
+            // Enable double buffering for DataGridView for smoother performance
+            typeof(DataGridView).InvokeMember("DoubleBuffered",
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+                null, curveDataGridView, [true]);
         }
 
         #region Curve Inspector
@@ -18,12 +24,23 @@ namespace OpenCalligraphy.Gui.UserControls
         {
             // NOTE: null curve is valid input here to clear the inspector
 
+            EnableCurveControls(curve);
+
             SetCurveMetadata(curve);
+
+            PopulateCurveDataGridView(curve);
         }
 
         public void Clear()
         {
             InspectCurve(null);
+        }
+
+        private void EnableCurveControls(Curve curve)
+        {
+            bool hasCurve = curve != null;
+
+            curveFindReferencesButton.Enabled = hasCurve;
         }
 
         private void SetCurveMetadata(Curve curve)
@@ -39,13 +56,29 @@ namespace OpenCalligraphy.Gui.UserControls
             curveNameTextBox.Text = name;
         }
 
+        private void PopulateCurveDataGridView(Curve curve)
+        {
+            curveDataGridView.Rows.Clear();
+
+            if (curve != null)
+            {
+                for (int i = curve.MinPosition; i <= curve.MaxPosition; i++)
+                    curveDataGridView.Rows.Add(i, curve.GetAt(i));
+            }
+
+            curveDataGridView.Tag = curve;
+        }
+
         #endregion
 
         #region Event Handlers
 
         private void curveFindReferencesButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not yet implemented");
+            if (curveDataGridView.Tag is not Curve curve)
+                return;
+
+            MainForm?.SearchReferences(curve.Id);
         }
 
         #endregion

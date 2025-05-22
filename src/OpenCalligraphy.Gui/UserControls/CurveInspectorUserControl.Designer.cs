@@ -28,25 +28,46 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             curvePanel = new Panel();
+            curveDataGridView = new DataGridView();
             curveMetadataGroupBox = new GroupBox();
             curveMetadataTableLayoutPanel = new TableLayoutPanel();
             curveFindReferencesButton = new Button();
             curveNameTextBox = new TextBox();
             curveNameLabel = new Label();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
             curvePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)curveDataGridView).BeginInit();
             curveMetadataGroupBox.SuspendLayout();
             curveMetadataTableLayoutPanel.SuspendLayout();
             SuspendLayout();
             // 
             // curvePanel
             // 
+            curvePanel.Controls.Add(curveDataGridView);
             curvePanel.Controls.Add(curveMetadataGroupBox);
             curvePanel.Dock = DockStyle.Fill;
             curvePanel.Location = new Point(0, 0);
             curvePanel.Name = "curvePanel";
             curvePanel.Size = new Size(800, 600);
             curvePanel.TabIndex = 0;
+            // 
+            // curveDataGridView
+            // 
+            curveDataGridView.AllowUserToAddRows = false;
+            curveDataGridView.AllowUserToDeleteRows = false;
+            curveDataGridView.AllowUserToResizeColumns = false;
+            curveDataGridView.AllowUserToResizeRows = false;
+            curveDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            curveDataGridView.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2 });
+            curveDataGridView.Dock = DockStyle.Fill;
+            curveDataGridView.Location = new Point(0, 51);
+            curveDataGridView.Name = "curveDataGridView";
+            curveDataGridView.RowHeadersVisible = false;
+            curveDataGridView.Size = new Size(800, 549);
+            curveDataGridView.TabIndex = 1;
             // 
             // curveMetadataGroupBox
             // 
@@ -80,6 +101,7 @@
             // 
             // curveFindReferencesButton
             // 
+            curveFindReferencesButton.Enabled = false;
             curveFindReferencesButton.Location = new Point(677, 3);
             curveFindReferencesButton.Name = "curveFindReferencesButton";
             curveFindReferencesButton.Size = new Size(114, 23);
@@ -107,6 +129,22 @@
             curveNameLabel.TabIndex = 2;
             curveNameLabel.Text = "Curve:";
             // 
+            // Column1
+            // 
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
+            Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            Column1.HeaderText = "Index";
+            Column1.Name = "Column1";
+            Column1.ReadOnly = true;
+            Column1.Width = 50;
+            // 
+            // Column2
+            // 
+            Column2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Column2.HeaderText = "Value";
+            Column2.Name = "Column2";
+            Column2.ReadOnly = true;
+            // 
             // CurveInspectorUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -116,6 +154,7 @@
             Size = new Size(800, 600);
             curvePanel.ResumeLayout(false);
             curvePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)curveDataGridView).EndInit();
             curveMetadataGroupBox.ResumeLayout(false);
             curveMetadataGroupBox.PerformLayout();
             curveMetadataTableLayoutPanel.ResumeLayout(false);
@@ -131,5 +170,8 @@
         private Button curveFindReferencesButton;
         private TextBox curveNameTextBox;
         private Label curveNameLabel;
+        private DataGridView curveDataGridView;
+        private DataGridViewTextBoxColumn Column1;
+        private DataGridViewTextBoxColumn Column2;
     }
 }
