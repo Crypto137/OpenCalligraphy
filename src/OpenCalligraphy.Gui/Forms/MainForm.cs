@@ -4,7 +4,6 @@ using OpenCalligraphy.Core.GameData;
 using OpenCalligraphy.Core.GameData.Prototypes;
 using OpenCalligraphy.Core.Locales;
 using OpenCalligraphy.Gui.Helpers;
-using OpenCalligraphy.Gui.Models;
 
 namespace OpenCalligraphy.Gui.Forms
 {
@@ -13,20 +12,20 @@ namespace OpenCalligraphy.Gui.Forms
         private readonly FileTree _fileTree = new("Calligraphy");
         private readonly DataRefIndex _dataRefIndex = new();
 
-        private readonly Stack<PrototypeId> _prototypeBackStack = new();
-        private readonly Stack<PrototypeId> _prototypeForwardStack = new();
-
         private readonly FileTree _searchFileTree = new("Calligraphy");
 
-        private bool _updatingSettings;
+        private bool _updatingSettings = false;
 
-        private bool _prototypeMetadataToggle;
-        private bool _evalExpressionStringToggle;
-        private bool _embedEmptyRHStructsToggle;
+        // Settings
+        public bool PrototypeMetadataToggle { get; private set; }
+        public bool EvalExpressionStringToggle { get; private set; }
+        public bool EmbedEmptyRHStructsToggle { get; private set; }
 
         public MainForm()
         {
             InitializeComponent();
+
+            prototypeInspectorUserControl.MainForm = this;
 
             InitializeSettings();
         }
@@ -70,7 +69,7 @@ namespace OpenCalligraphy.Gui.Forms
 
             ClearFileSearchResults();
             ClearOpenedFiles();
-            ClearPrototypeInspectHistory();
+            prototypeInspectorUserControl.Clear();
         }
 
         private void BuildFileTree()
@@ -163,13 +162,13 @@ namespace OpenCalligraphy.Gui.Forms
             {
                 Prototype prototype = GameDatabase.GetPrototype(prototypeName);
                 if (prototype != null)
-                    InspectPrototype(prototype);
+                    prototypeInspectorUserControl.InspectPrototype(prototype);
             }
         }
 
         private void ClearOpenedFiles()
         {
-            InspectPrototype(null);
+            prototypeInspectorUserControl.InspectPrototype(null);
         }
 
         #region File Search
@@ -227,25 +226,25 @@ namespace OpenCalligraphy.Gui.Forms
                 "Search", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void SearchReferences(AssetId dataRef)
+        public void SearchReferences(AssetId dataRef)
         {
             List<string> fileList = _dataRefIndex.GetReferencers(dataRef).Select(referencer => referencer.GetName()).ToList();
             SearchReferencesHelper(dataRef.GetName(), fileList);
         }
 
-        private void SearchReferences(CurveId dataRef)
+        public void SearchReferences(CurveId dataRef)
         {
             List<string> fileList = _dataRefIndex.GetReferencers(dataRef).Select(referencer => referencer.GetName()).ToList();
             SearchReferencesHelper(dataRef.GetName(), fileList);
         }
 
-        private void SearchReferences(PrototypeId dataRef)
+        public void SearchReferences(PrototypeId dataRef)
         {
             List<string> fileList = _dataRefIndex.GetReferencers(dataRef).Select(referencer => referencer.GetName()).ToList();
             SearchReferencesHelper(dataRef.GetName(), fileList);
         }
 
-        private void SearchReferences(AssetTypeId dataRef)
+        public void SearchReferences(AssetTypeId dataRef)
         {
             List<string> fileList = _dataRefIndex.GetReferencers(dataRef).Select(referencer => referencer.GetName()).ToList();
             SearchReferencesHelper(dataRef.GetName(), fileList);
@@ -287,200 +286,6 @@ namespace OpenCalligraphy.Gui.Forms
 
         #endregion
 
-        #region Prototype Inspector
-
-        private void InspectPrototype(Prototype prototype, bool addToHistory = true)
-        {
-            // NOTE: null prototype is valid input here to clear the inspector
-
-            if (addToHistory)
-                AddPrototypeToInspectHistory(prototypeTreeView.Tag as Prototype);
-
-            ClearPrototypeSearchResults();
-
-            EnablePrototypeControls(prototype);
-
-            SetPrototypeMetadata(prototype);
-
-            PopulatePrototypeTreeView(prototype);
-        }
-
-        private void ReloadPrototype()
-        {
-            if (_updatingSettings)
-                return;
-
-            if (prototypeTreeView.Tag is Prototype prototype)
-                InspectPrototype(prototype, false);
-        }
-
-        private void EnablePrototypeControls(Prototype prototype)
-        {
-            bool hasPrototype = prototype != null;
-
-            prototypeInspectParentButton.Enabled = hasPrototype && prototype.ParentDataRef != PrototypeId.Invalid;
-            prototypeFindReferencesButton.Enabled = hasPrototype;
-
-            prototypeSearchClearButton.Enabled = hasPrototype;
-            prototypeSearchTextBox.Enabled = hasPrototype;
-            prototypeSearchButton.Enabled = hasPrototype;
-        }
-
-        private void SetPrototypeMetadata(Prototype prototype)
-        {
-            string name = string.Empty;
-            string parent = string.Empty;
-            string blueprint = string.Empty;
-            string flags = string.Empty;
-            string runtimeBinding = string.Empty;
-
-            if (prototype != null)
-            {
-                PrototypeDataRefRecord dataRefRecord = DataDirectory.Instance.GetPrototypeDataRefRecord(prototype.DataRef);
-                if (dataRefRecord != null)
-                {
-                    name = $"{dataRefRecord.PrototypeId.GetName()} (id={dataRefRecord.PrototypeId}, guid={dataRefRecord.PrototypeGuid})";
-
-                    if (prototype.ParentDataRef != PrototypeId.Invalid)
-                        parent = $"{prototype.ParentDataRef.GetName()} ({prototype.ParentDataRef})";
-
-                    blueprint = $"{dataRefRecord.BlueprintId.GetName()} ({dataRefRecord.BlueprintId})";
-                    flags = dataRefRecord.Flags.ToString();
-                    runtimeBinding = dataRefRecord.RuntimeBinding;
-                }
-            }
-
-            prototypeNameTextBox.Text = name;
-            prototypeParentTextBox.Text = parent;
-            prototypeBlueprintTextBox.Text = blueprint;
-            prototypeFlagsTextBox.Text = flags;
-            prototypeRuntimeBindingTextBox.Text = runtimeBinding;
-        }
-
-        private void PopulatePrototypeTreeView(Prototype prototype)
-        {
-            prototypeTreeView.BeginUpdate();
-            prototypeTreeView.Nodes.Clear();
-
-            TreeNode root = null;
-
-            if (prototype != null)
-            {
-                root = prototypeTreeView.Nodes.Add(string.Empty);
-
-                PrototypeTreeHelperFlags flags = PrototypeTreeHelperFlags.None;
-                if (_evalExpressionStringToggle)
-                    flags |= PrototypeTreeHelperFlags.UseEvalExpressionStrings;
-
-                if (_embedEmptyRHStructsToggle)
-                    flags |= PrototypeTreeHelperFlags.EmbedEmptyRHStructs;
-
-                PrototypeTreeHelper.SetPrototype(root, prototype, prototype?.ToString(), flags);
-                root.Expand();
-            }
-
-            prototypeTreeView.EndUpdate();
-
-            prototypeTreeView.SelectedNode = root;
-            prototypeTreeView.Tag = prototype;
-        }
-
-        #endregion
-
-        #region Prototype Inspect History
-
-        private void PrototypeGoBack()
-        {
-            if (_prototypeBackStack.Count == 0)
-                return;
-
-            if (prototypeTreeView.Tag is Prototype prototype)
-                _prototypeForwardStack.Push(prototype.DataRef);
-
-            PrototypeId previousProtoRef = _prototypeBackStack.Pop();
-            Prototype previousProto = previousProtoRef.AsPrototype();
-            InspectPrototype(previousProto, false);
-
-            RefreshPrototypeInspectHistoryButtons();
-        }
-
-        private void PrototypeGoForward()
-        {
-            if (_prototypeForwardStack.Count == 0)
-                return;
-
-            if (prototypeTreeView.Tag is Prototype prototype)
-                _prototypeBackStack.Push(prototype.DataRef);
-
-            PrototypeId nextProtoRef = _prototypeForwardStack.Pop();
-            Prototype nextProto = nextProtoRef.AsPrototype();
-            InspectPrototype(nextProto, false);
-
-            RefreshPrototypeInspectHistoryButtons();
-        }
-
-        private void AddPrototypeToInspectHistory(Prototype prototype)
-        {
-            if (prototype != null)
-                _prototypeBackStack.Push(prototype.DataRef);
-
-            _prototypeForwardStack.Clear();
-
-            RefreshPrototypeInspectHistoryButtons();
-        }
-
-        private void ClearPrototypeInspectHistory()
-        {
-            _prototypeBackStack.Clear();
-            _prototypeForwardStack.Clear();
-
-            RefreshPrototypeInspectHistoryButtons();
-        }
-
-        private void RefreshPrototypeInspectHistoryButtons()
-        {
-            prototypeBackButton.Enabled = _prototypeBackStack.Count > 0;
-            prototypeForwardButton.Enabled = _prototypeForwardStack.Count > 0;
-        }
-
-        #endregion
-
-        #region Prototype Search
-
-        private void SearchInPrototype(string pattern)
-        {
-            if (string.IsNullOrWhiteSpace(pattern))
-                return;
-
-            pattern = pattern.Trim();
-
-            PrototypeTreeHelper.ClearTreeViewBackColor(prototypeTreeView);
-
-            List<TreeNode> nodeList = new();
-            PrototypeTreeHelper.SearchTreeView(prototypeTreeView, pattern, nodeList);
-
-            prototypeTreeView.BeginUpdate();
-
-            foreach (TreeNode treeNode in nodeList)
-                PrototypeTreeHelper.ColorAndExpandTreeNode(treeNode, Color.Yellow);
-
-            prototypeTreeView.EndUpdate();
-
-            if (nodeList.Count > 0)
-                prototypeTreeView.SelectedNode = nodeList[0];
-
-            MessageBox.Show($"Found {nodeList.Count} {(nodeList.Count == 1 ? "node" : "nodes")} containing '{pattern}'.",
-                "Prototype Search", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void ClearPrototypeSearchResults()
-        {
-            prototypeSearchTextBox.Text = string.Empty;
-            PrototypeTreeHelper.ClearTreeViewBackColor(prototypeTreeView);
-        }
-
-        #endregion
-
         #region Locales
 
         private void LoadLocale()
@@ -502,7 +307,7 @@ namespace OpenCalligraphy.Gui.Forms
                 return;
 
             // Reload the current prototype if succesfully loaded
-            ReloadPrototype();
+            prototypeInspectorUserControl.ReloadPrototype();
 
             Locale locale = LocaleManager.Instance.CurrentLocale;
             MessageBox.Show($"Loaded locale '{locale.Name}' ({locale.Entries.Count} entries).", "Locale Manager", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -542,42 +347,39 @@ namespace OpenCalligraphy.Gui.Forms
 
             _updatingSettings = false;
 
-            ReloadPrototype();
+            prototypeInspectorUserControl.ReloadPrototype();
         }
 
         private void SetPrototypeMetadataToggle(bool value)
         {
-            _prototypeMetadataToggle = value;
+            PrototypeMetadataToggle = value;
             ConfigurationHelper.Write(Settings.PrototypeMetadataToggle, value);
 
-            prototypeBlueprintLabel.Visible = value;
-            prototypeBlueprintTextBox.Visible = value;
-            prototypeFlagsLabel.Visible = value;
-            prototypeFlagsTextBox.Visible = value;
-            prototypeRuntimeBindingLabel.Visible = value;
-            prototypeRuntimeBindingTextBox.Visible = value;
-
             showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
+
+            prototypeInspectorUserControl.ToggleMetadataVisibility(value);
         }
 
         private void SetEvalExpressionStringToggle(bool value)
         {
-            _evalExpressionStringToggle = value;
+            EvalExpressionStringToggle = value;
             ConfigurationHelper.Write(Settings.EvalExpressionStringToggle, value);
 
             showEvalExpressionStringsToolStripMenuItem.Checked = value;
 
-            ReloadPrototype();
+            if (_updatingSettings == false)
+                prototypeInspectorUserControl.ReloadPrototype();
         }
 
         private void SetEmbedEmptyRHStructsToggle(bool value)
         {
-            _embedEmptyRHStructsToggle = value;
+            EmbedEmptyRHStructsToggle = value;
             ConfigurationHelper.Write(Settings.EmbedEmptyRHStructsToggle, value);
 
             embedEmptyRHStructsToolStripMenuItem.Checked = value;
 
-            ReloadPrototype();
+            if (_updatingSettings == false)
+                prototypeInspectorUserControl.ReloadPrototype();
         }
 
         #endregion
@@ -608,17 +410,17 @@ namespace OpenCalligraphy.Gui.Forms
 
         private void showAdditionalPrototypeMetadataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetPrototypeMetadataToggle(_prototypeMetadataToggle == false);
+            SetPrototypeMetadataToggle(PrototypeMetadataToggle == false);
         }
 
         private void showEvalExpressionStringsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetEvalExpressionStringToggle(_evalExpressionStringToggle == false);
+            SetEvalExpressionStringToggle(EvalExpressionStringToggle == false);
         }
 
         private void embedEmptyRHStructsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetEmbedEmptyRHStructsToggle(_embedEmptyRHStructsToggle == false);
+            SetEmbedEmptyRHStructsToggle(EmbedEmptyRHStructsToggle == false);
         }
 
         private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -675,143 +477,6 @@ namespace OpenCalligraphy.Gui.Forms
         private void fileSearchTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             TryOpenFile(e.Node);
-        }
-
-        #endregion
-
-        #region Prototype Events
-
-        private void prototypeBackButton_Click(object sender, EventArgs e)
-        {
-            PrototypeGoBack();
-        }
-
-        private void prototypeForwardButton_Click(object sender, EventArgs e)
-        {
-            PrototypeGoForward();
-        }
-
-        private void prototypeInspectParentButton_Click(object sender, EventArgs e)
-        {
-            if (prototypeTreeView.Tag is not Prototype prototype)
-                return;
-
-            if (prototype.ParentDataRef == PrototypeId.Invalid)
-                return;
-
-            InspectPrototype(prototype.ParentDataRef.AsPrototype());
-        }
-
-        private void prototypeFindReferencesButton_Click(object sender, EventArgs e)
-        {
-            if (prototypeTreeView.Tag is not Prototype prototype)
-                return;
-
-            SearchReferences(prototype.DataRef);
-        }
-
-        private void prototypeTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            // Show context menu on right click
-            if (e.Button != MouseButtons.Right)
-                return;
-
-            if (e.Node.Tag is DataRefTreeNodeTag dataRefTag)
-            {
-                dataRefContextMenuStrip.Tag = dataRefTag;
-                dataRefContextMenuStrip.Show(e.Node.TreeView, e.Location);
-            }
-            else if (e.Node.Tag is PrimitiveValueTreeNodeTag primitiveValueTag)
-            {
-                primitiveValueContextMenuStrip.Tag = primitiveValueTag;
-                primitiveValueContextMenuStrip.Show(e.Node.TreeView, e.Location);
-            }
-        }
-
-        private void prototypeTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            // Go to data ref on double left click
-            if (e.Button != MouseButtons.Left)
-                return;
-
-            if (e.Node.Tag is not DataRefTreeNodeTag dataRefTag)
-                return;
-
-            object data = dataRefTag.GetData();
-            switch (data)
-            {
-                case Prototype prototype:
-                    InspectPrototype(prototype);
-                    break;
-
-                    // TODO: Add other inspectable types
-            }
-        }
-
-        private void dataRefCopyNameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is not ToolStripMenuItem menuItem)
-                return;
-
-            if (menuItem.Owner.Tag is not DataRefTreeNodeTag dataRefTag)
-                return;
-
-            Clipboard.SetText(dataRefTag.GetNameString());
-        }
-
-        private void dataRefCopyValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is not ToolStripMenuItem menuItem)
-                return;
-
-            if (menuItem.Owner.Tag is not DataRefTreeNodeTag dataRefTag)
-                return;
-
-            Clipboard.SetText(dataRefTag.GetValueString());
-        }
-
-        private void dataRefFindReferencesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is not ToolStripMenuItem menuItem)
-                return;
-
-            if (menuItem.Owner.Tag is not DataRefTreeNodeTag dataRefTag)
-                return;
-
-            switch (dataRefTag.Type)
-            {
-                case CalligraphyBaseType.Asset:     SearchReferences((AssetId)dataRefTag.DataRef); break;
-                case CalligraphyBaseType.Curve:     SearchReferences((CurveId)dataRefTag.DataRef); break;
-                case CalligraphyBaseType.Prototype: SearchReferences((PrototypeId)dataRefTag.DataRef); break;
-                case CalligraphyBaseType.Type:      SearchReferences((AssetTypeId)dataRefTag.DataRef); break;
-            }
-        }
-
-        private void primitiveValueCopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sender is not ToolStripMenuItem menuItem)
-                return;
-
-            if (menuItem.Owner.Tag is not PrimitiveValueTreeNodeTag primitiveValueTag)
-                return;
-
-            Clipboard.SetText(primitiveValueTag.ToString());
-        }
-
-        private void prototypeSearchButton_Click(object sender, EventArgs e)
-        {
-            SearchInPrototype(prototypeSearchTextBox.Text);
-        }
-
-        private void prototypeSearchTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                SearchInPrototype(prototypeSearchTextBox.Text);
-        }
-
-        private void prototypeSearchClearButton_Click(object sender, EventArgs e)
-        {
-            ClearPrototypeSearchResults();
         }
 
         #endregion
