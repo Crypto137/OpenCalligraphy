@@ -6,11 +6,11 @@ namespace OpenCalligraphy.Core.GameData
     {
         private static readonly Logger Logger = LogManager.CreateLogger();
 
-        private readonly CurveId _curveId;
         private readonly double[] _values;
 
         public double this[int index] { get => _values[index]; }
 
+        public CurveId Id { get; }
         public int MinPosition { get; }    // m_startPosition
         public int MaxPosition { get; }    // m_endPosition
 
@@ -21,7 +21,7 @@ namespace OpenCalligraphy.Core.GameData
         /// </summary>
         public Curve(Stream stream, CurveId curveId)
         {
-            _curveId = curveId;
+            Id = curveId;
 
             using BinaryReader reader = new(stream);
 
@@ -41,7 +41,7 @@ namespace OpenCalligraphy.Core.GameData
 
         public override string ToString()
         {
-            return GameDatabase.GetCurveName(_curveId);
+            return GameDatabase.GetCurveName(Id);
         }
 
         /// <summary>

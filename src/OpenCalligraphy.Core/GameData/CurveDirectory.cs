@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace OpenCalligraphy.Core.GameData
 {
-    public class CurveDirectory : IEnumerable<Curve>
+    public class CurveDirectory : IEnumerable<CurveId>
     {
         private static readonly Logger Logger = LogManager.CreateLogger();
 
@@ -55,10 +55,10 @@ namespace OpenCalligraphy.Core.GameData
             _curveRecordDict.Clear();
         }
 
-        public IEnumerator<Curve> GetEnumerator()
+        public IEnumerator<CurveId> GetEnumerator()
         {
-            foreach (CurveRecord record in _curveRecordDict.Values)
-                yield return record.Curve;
+            foreach (CurveId curveId in _curveRecordDict.Keys)
+                yield return curveId;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

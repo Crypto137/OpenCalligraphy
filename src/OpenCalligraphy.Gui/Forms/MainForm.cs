@@ -4,6 +4,7 @@ using OpenCalligraphy.Core.GameData;
 using OpenCalligraphy.Core.GameData.Prototypes;
 using OpenCalligraphy.Core.Locales;
 using OpenCalligraphy.Gui.Helpers;
+using OpenCalligraphy.Gui.Models;
 
 namespace OpenCalligraphy.Gui.Forms
 {
@@ -21,6 +22,7 @@ namespace OpenCalligraphy.Gui.Forms
             InitializeComponent();
 
             prototypeInspectorUserControl.MainForm = this;
+            curveInspectorUserControl.MainForm = this;
 
             Settings = new(this);
             Settings.Initialize();
@@ -52,7 +54,7 @@ namespace OpenCalligraphy.Gui.Forms
                 Text = "OpenCalligraphy";
                 _fileTree.Clear();
                 fileTreeView.Nodes.Clear();
-                ClearOpenedFiles();
+                ClearInspectors();
             }
         }
 
@@ -64,8 +66,7 @@ namespace OpenCalligraphy.Gui.Forms
             Text = $"OpenCalligraphy - {filePath}";
 
             ClearFileSearchResults();
-            ClearOpenedFiles();
-            prototypeInspectorUserControl.Clear();
+            ClearInspectors();
         }
 
         private void BuildFileTree()
@@ -74,8 +75,13 @@ namespace OpenCalligraphy.Gui.Forms
             _fileTree.Clear();
 
             List<string> fileList = new();
+
             foreach (PrototypeId prototypeId in DataDirectory.Instance.IteratePrototypes())
                 fileList.Add(prototypeId.GetName());
+
+            foreach (CurveId curveId in CurveDirectory.Instance)
+                fileList.Add(curveId.GetName());
+
             fileList.Sort();
 
             _fileTree.AddFileList(fileList);
@@ -83,7 +89,7 @@ namespace OpenCalligraphy.Gui.Forms
             // Load initial TreeView data
             FileTreeHelper.InitializeFileTreeView(fileTreeView, _fileTree);
 
-            fileTabControl.SelectedIndex = 0;
+            fileTabControl.SelectedIndex = fileTabControl.TabPages.IndexOf(browseTabPage);
         }
 
         private void InitializeDataRefIndex(string filePath)
@@ -152,19 +158,57 @@ namespace OpenCalligraphy.Gui.Forms
             if (fileTreeNode.IsFile == false)
                 return;
 
-            // TODO: Other file types? (curves / asset types)
-            string prototypeName = fileTreeNode.FilePath;
-            if (prototypeName != null)
+            string filePath = fileTreeNode.FilePath;
+            switch (Path.GetExtension(filePath))
             {
-                Prototype prototype = GameDatabase.GetPrototype(prototypeName);
-                if (prototype != null)
-                    prototypeInspectorUserControl.InspectPrototype(prototype);
+                case ".prototype":
+                case ".defaults":
+                    OpenPrototype(GameDatabase.GetPrototype(filePath));
+                    break;
+
+                case ".curve":
+                    OpenCurve(GameDatabase.GetCurve(filePath));
+                    break;
             }
         }
 
-        private void ClearOpenedFiles()
+        internal void OpenDataRefTag(DataRefTreeNodeTag dataRefTag)
         {
-            prototypeInspectorUserControl.InspectPrototype(null);
+            object data = dataRefTag.GetData();
+            switch (data)
+            {
+                case Prototype prototype:
+                    OpenPrototype(prototype);
+                    break;
+
+                case Curve curve:
+                    OpenCurve(curve);
+                    break;
+            }
+        }
+
+        private void OpenPrototype(Prototype prototype)
+        {
+            if (prototype == null)
+                return;
+
+            inspectorTabControl.SelectedIndex = inspectorTabControl.TabPages.IndexOf(prototypeTabPage);
+            prototypeInspectorUserControl.InspectPrototype(prototype);
+        }
+
+        private void OpenCurve(Curve curve)
+        {
+            if (curve == null)
+                return;
+
+            inspectorTabControl.SelectedIndex = inspectorTabControl.TabPages.IndexOf(curveTabPage);
+            curveInspectorUserControl.InspectCurve(curve);
+        }
+
+        private void ClearInspectors()
+        {
+            prototypeInspectorUserControl.Clear();
+            curveInspectorUserControl.Clear();
         }
 
         #region File Search
@@ -266,7 +310,7 @@ namespace OpenCalligraphy.Gui.Forms
 
             FileTreeHelper.InitializeFileTreeView(fileSearchTreeView, _searchFileTree);
 
-            fileTabControl.SelectedIndex = 1;
+            fileTabControl.SelectedIndex = fileTabControl.TabPages.IndexOf(searchTabPage);
 
             if (fileList.Count <= MaxAutoExpandSearchResults)
                 fileSearchTreeView.ExpandAll();

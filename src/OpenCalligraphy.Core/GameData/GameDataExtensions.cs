@@ -8,6 +8,14 @@ namespace OpenCalligraphy.Core.GameData
     public static class GameDataExtensions
     {
         /// <summary>
+        /// Returns the <see cref="Curve"/> that this <see cref="CurveId"/> refers to.
+        /// </summary>
+        public static Curve AsCurve(this CurveId curveId)
+        {
+            return GameDatabase.GetCurve(curveId);
+        }
+
+        /// <summary>
         /// Returns the <see cref="Blueprint"/> that this <see cref="BlueprintId"/> refers to.
         /// </summary>
         public static Blueprint AsBlueprint(this BlueprintId blueprintId)

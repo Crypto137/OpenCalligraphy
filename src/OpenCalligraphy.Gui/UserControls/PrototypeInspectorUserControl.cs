@@ -44,6 +44,7 @@ namespace OpenCalligraphy.Gui.UserControls
 
         public void Clear()
         {
+            InspectPrototype(null);
             ClearPrototypeInspectHistory();
         }
 
@@ -294,15 +295,7 @@ namespace OpenCalligraphy.Gui.UserControls
             if (e.Node.Tag is not DataRefTreeNodeTag dataRefTag)
                 return;
 
-            object data = dataRefTag.GetData();
-            switch (data)
-            {
-                case Prototype prototype:
-                    InspectPrototype(prototype);
-                    break;
-
-                    // TODO: Add other inspectable types
-            }
+            MainForm?.OpenDataRefTag(dataRefTag);
         }
 
         private void dataRefCopyNameToolStripMenuItem_Click(object sender, EventArgs e)
