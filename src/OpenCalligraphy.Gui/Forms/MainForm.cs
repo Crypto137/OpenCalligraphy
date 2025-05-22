@@ -238,6 +238,15 @@ namespace OpenCalligraphy.Gui.Forms
                 fileList.Add(prototypeName);
             }
 
+            foreach (CurveId curveRef in CurveDirectory.Instance)
+            {
+                string curveName = curveRef.GetName();
+                if (curveName.Contains(pattern, StringComparison.OrdinalIgnoreCase) == false)
+                    continue;
+
+                fileList.Add(curveName);
+            }
+
             BuildSearchFileTree(fileList);
 
             fileSearchTreeView.Nodes[0].Text = $"Search Results for '{pattern}':";
