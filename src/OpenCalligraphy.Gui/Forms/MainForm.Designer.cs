@@ -60,6 +60,8 @@
             inspectorTabControl = new TabControl();
             prototypeTabPage = new TabPage();
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
+            curveTabPage = new TabPage();
+            curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -72,6 +74,7 @@
             searchTableLayoutPanel.SuspendLayout();
             inspectorTabControl.SuspendLayout();
             prototypeTabPage.SuspendLayout();
+            curveTabPage.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -326,6 +329,7 @@
             // inspectorTabControl
             // 
             inspectorTabControl.Controls.Add(prototypeTabPage);
+            inspectorTabControl.Controls.Add(curveTabPage);
             inspectorTabControl.Dock = DockStyle.Fill;
             inspectorTabControl.Location = new Point(0, 0);
             inspectorTabControl.Name = "inspectorTabControl";
@@ -352,6 +356,25 @@
             prototypeInspectorUserControl.Name = "prototypeInspectorUserControl";
             prototypeInspectorUserControl.Size = new Size(825, 703);
             prototypeInspectorUserControl.TabIndex = 0;
+            // 
+            // curveTabPage
+            // 
+            curveTabPage.Controls.Add(curveInspectorUserControl);
+            curveTabPage.Location = new Point(4, 24);
+            curveTabPage.Name = "curveTabPage";
+            curveTabPage.Padding = new Padding(3);
+            curveTabPage.Size = new Size(831, 709);
+            curveTabPage.TabIndex = 1;
+            curveTabPage.Text = "Curve";
+            curveTabPage.UseVisualStyleBackColor = true;
+            // 
+            // curveInspectorUserControl
+            // 
+            curveInspectorUserControl.Dock = DockStyle.Fill;
+            curveInspectorUserControl.Location = new Point(3, 3);
+            curveInspectorUserControl.Name = "curveInspectorUserControl";
+            curveInspectorUserControl.Size = new Size(825, 703);
+            curveInspectorUserControl.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -380,6 +403,7 @@
             searchTableLayoutPanel.PerformLayout();
             inspectorTabControl.ResumeLayout(false);
             prototypeTabPage.ResumeLayout(false);
+            curveTabPage.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -417,5 +441,7 @@
         private ToolStripMenuItem showEvalExpressionStringsToolStripMenuItem;
         private ToolStripMenuItem embedEmptyRHStructsToolStripMenuItem;
         private UserControls.PrototypeInspectorUserControl prototypeInspectorUserControl;
+        private TabPage curveTabPage;
+        private UserControls.CurveInspectorUserControl curveInspectorUserControl;
     }
 }
