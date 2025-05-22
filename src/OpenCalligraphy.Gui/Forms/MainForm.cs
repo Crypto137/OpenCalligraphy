@@ -14,12 +14,7 @@ namespace OpenCalligraphy.Gui.Forms
 
         private readonly FileTree _searchFileTree = new("Calligraphy");
 
-        private bool _updatingSettings = false;
-
-        // Settings
-        public bool PrototypeMetadataToggle { get; private set; }
-        public bool EvalExpressionStringToggle { get; private set; }
-        public bool EmbedEmptyRHStructsToggle { get; private set; }
+        public SettingsManager Settings { get; }
 
         public MainForm()
         {
@@ -27,7 +22,8 @@ namespace OpenCalligraphy.Gui.Forms
 
             prototypeInspectorUserControl.MainForm = this;
 
-            InitializeSettings();
+            Settings = new(this);
+            Settings.Initialize();
         }
 
         #region Data Logic
@@ -317,73 +313,6 @@ namespace OpenCalligraphy.Gui.Forms
 
         #endregion
 
-        #region Settings
-
-        private enum Settings
-        {
-            PrototypeMetadataToggle,
-            EvalExpressionStringToggle,
-            EmbedEmptyRHStructsToggle,
-        }
-
-        private void InitializeSettings()
-        {
-            _updatingSettings = true;   // Disable prototype reloading while we update settings
-
-            // PrototypeMetadataToggle
-            if (ConfigurationHelper.Read(Settings.PrototypeMetadataToggle, out bool prototypeMetadataToggle) == false)
-                prototypeMetadataToggle = false;
-            SetPrototypeMetadataToggle(prototypeMetadataToggle);
-
-            // EvalExpressionStringToggle
-            if (ConfigurationHelper.Read(Settings.EvalExpressionStringToggle, out bool evalExpressionStringToggle) == false)
-                evalExpressionStringToggle = true;
-            SetEvalExpressionStringToggle(evalExpressionStringToggle);
-
-            // EmbedEmptyRHStructsToggle
-            if (ConfigurationHelper.Read(Settings.EmbedEmptyRHStructsToggle, out bool embedEmptyRHStructsToggle) == false)
-                embedEmptyRHStructsToggle = false;
-            SetEmbedEmptyRHStructsToggle(embedEmptyRHStructsToggle);
-
-            _updatingSettings = false;
-
-            prototypeInspectorUserControl.ReloadPrototype();
-        }
-
-        private void SetPrototypeMetadataToggle(bool value)
-        {
-            PrototypeMetadataToggle = value;
-            ConfigurationHelper.Write(Settings.PrototypeMetadataToggle, value);
-
-            showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
-
-            prototypeInspectorUserControl.ToggleMetadataVisibility(value);
-        }
-
-        private void SetEvalExpressionStringToggle(bool value)
-        {
-            EvalExpressionStringToggle = value;
-            ConfigurationHelper.Write(Settings.EvalExpressionStringToggle, value);
-
-            showEvalExpressionStringsToolStripMenuItem.Checked = value;
-
-            if (_updatingSettings == false)
-                prototypeInspectorUserControl.ReloadPrototype();
-        }
-
-        private void SetEmbedEmptyRHStructsToggle(bool value)
-        {
-            EmbedEmptyRHStructsToggle = value;
-            ConfigurationHelper.Write(Settings.EmbedEmptyRHStructsToggle, value);
-
-            embedEmptyRHStructsToolStripMenuItem.Checked = value;
-
-            if (_updatingSettings == false)
-                prototypeInspectorUserControl.ReloadPrototype();
-        }
-
-        #endregion
-
         #region Event Handlers
 
         #region ToolStrip Events
@@ -410,17 +339,17 @@ namespace OpenCalligraphy.Gui.Forms
 
         private void showAdditionalPrototypeMetadataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetPrototypeMetadataToggle(PrototypeMetadataToggle == false);
+            Settings.SetPrototypeMetadataToggle(Settings.PrototypeMetadataToggle == false);
         }
 
         private void showEvalExpressionStringsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetEvalExpressionStringToggle(EvalExpressionStringToggle == false);
+            Settings.SetEvalExpressionStringToggle(Settings.EvalExpressionStringToggle == false);
         }
 
         private void embedEmptyRHStructsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetEmbedEmptyRHStructsToggle(EmbedEmptyRHStructsToggle == false);
+            Settings.SetEmbedEmptyRHStructsToggle(Settings.EmbedEmptyRHStructsToggle == false);
         }
 
         private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -482,5 +411,85 @@ namespace OpenCalligraphy.Gui.Forms
         #endregion
 
         #endregion
+
+        public class SettingsManager
+        {
+            // NOTE: This is nested in MainForm to give it access to MainForm's private fields
+            private readonly MainForm _mainForm;
+
+            private bool _fullUpdate = false;
+
+            public bool PrototypeMetadataToggle { get; private set; }
+            public bool EvalExpressionStringToggle { get; private set; }
+            public bool EmbedEmptyRHStructsToggle { get; private set; }
+
+            public SettingsManager(MainForm mainForm)
+            {
+                _mainForm = mainForm;
+            }
+
+            public void Initialize()
+            {
+                _fullUpdate = true;   // Disable certain features (e.g. prototype reloading) when we do a full update
+
+                // PrototypeMetadataToggle
+                if (ConfigurationHelper.Read(Settings.PrototypeMetadataToggle, out bool prototypeMetadataToggle) == false)
+                    prototypeMetadataToggle = false;
+                SetPrototypeMetadataToggle(prototypeMetadataToggle);
+
+                // EvalExpressionStringToggle
+                if (ConfigurationHelper.Read(Settings.EvalExpressionStringToggle, out bool evalExpressionStringToggle) == false)
+                    evalExpressionStringToggle = true;
+                SetEvalExpressionStringToggle(evalExpressionStringToggle);
+
+                // EmbedEmptyRHStructsToggle
+                if (ConfigurationHelper.Read(Settings.EmbedEmptyRHStructsToggle, out bool embedEmptyRHStructsToggle) == false)
+                    embedEmptyRHStructsToggle = false;
+                SetEmbedEmptyRHStructsToggle(embedEmptyRHStructsToggle);
+
+                _fullUpdate = false;
+
+                _mainForm.prototypeInspectorUserControl.ReloadPrototype();
+            }
+
+            public void SetPrototypeMetadataToggle(bool value)
+            {
+                PrototypeMetadataToggle = value;
+                ConfigurationHelper.Write(Settings.PrototypeMetadataToggle, value);
+
+                _mainForm.showAdditionalPrototypeMetadataToolStripMenuItem.Checked = value;
+
+                _mainForm.prototypeInspectorUserControl.ToggleMetadataVisibility(value);
+            }
+
+            public void SetEvalExpressionStringToggle(bool value)
+            {
+                EvalExpressionStringToggle = value;
+                ConfigurationHelper.Write(Settings.EvalExpressionStringToggle, value);
+
+                _mainForm.showEvalExpressionStringsToolStripMenuItem.Checked = value;
+
+                if (_fullUpdate == false)
+                    _mainForm.prototypeInspectorUserControl.ReloadPrototype();
+            }
+
+            public void SetEmbedEmptyRHStructsToggle(bool value)
+            {
+                EmbedEmptyRHStructsToggle = value;
+                ConfigurationHelper.Write(Settings.EmbedEmptyRHStructsToggle, value);
+
+                _mainForm.embedEmptyRHStructsToolStripMenuItem.Checked = value;
+
+                if (_fullUpdate == false)
+                    _mainForm.prototypeInspectorUserControl.ReloadPrototype();
+            }
+
+            private enum Settings
+            {
+                PrototypeMetadataToggle,
+                EvalExpressionStringToggle,
+                EmbedEmptyRHStructsToggle,
+            }
+        }
     }
 }

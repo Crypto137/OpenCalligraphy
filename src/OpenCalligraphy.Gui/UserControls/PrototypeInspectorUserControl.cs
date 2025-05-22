@@ -111,14 +111,9 @@ namespace OpenCalligraphy.Gui.UserControls
             {
                 root = prototypeTreeView.Nodes.Add(string.Empty);
 
-                PrototypeTreeHelperFlags flags = PrototypeTreeHelperFlags.None;
-                if (MainForm?.EvalExpressionStringToggle == true)
-                    flags |= PrototypeTreeHelperFlags.UseEvalExpressionStrings;
-
-                if (MainForm?.EmbedEmptyRHStructsToggle == true)
-                    flags |= PrototypeTreeHelperFlags.EmbedEmptyRHStructs;
-
+                PrototypeTreeHelperFlags flags = BuildPrototypeTreeFlags();
                 PrototypeTreeHelper.SetPrototype(root, prototype, prototype?.ToString(), flags);
+
                 root.Expand();
             }
 
@@ -126,6 +121,23 @@ namespace OpenCalligraphy.Gui.UserControls
 
             prototypeTreeView.SelectedNode = root;
             prototypeTreeView.Tag = prototype;
+        }
+
+        private PrototypeTreeHelperFlags BuildPrototypeTreeFlags()
+        {
+            PrototypeTreeHelperFlags flags = PrototypeTreeHelperFlags.None;
+
+            MainForm.SettingsManager settings = MainForm?.Settings;
+            if (settings != null)
+            {
+                if (settings.EvalExpressionStringToggle)
+                    flags |= PrototypeTreeHelperFlags.UseEvalExpressionStrings;
+
+                if (settings.EmbedEmptyRHStructsToggle)
+                    flags |= PrototypeTreeHelperFlags.EmbedEmptyRHStructs;
+            }
+
+            return flags;
         }
 
         #endregion
