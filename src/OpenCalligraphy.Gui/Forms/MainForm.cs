@@ -514,14 +514,31 @@ namespace OpenCalligraphy.Gui.Forms
 
         #region Settings
 
+        private enum Settings
+        {
+            PrototypeMetadataToggle,
+            EvalExpressionStringToggle,
+            EmbedEmptyRHStructsToggle,
+        }
+
         private void InitializeSettings()
         {
-            // TODO: Save settings
-            _updatingSettings = true;
+            _updatingSettings = true;   // Disable prototype reloading while we update settings
 
-            SetPrototypeMetadataToggle(false);
-            SetEvalExpressionStringToggle(true);
-            SetEmbedEmptyRHStructsToggle(false);
+            // PrototypeMetadataToggle
+            if (ConfigurationHelper.Read(Settings.PrototypeMetadataToggle, out bool prototypeMetadataToggle) == false)
+                prototypeMetadataToggle = false;
+            SetPrototypeMetadataToggle(prototypeMetadataToggle);
+
+            // EvalExpressionStringToggle
+            if (ConfigurationHelper.Read(Settings.EvalExpressionStringToggle, out bool evalExpressionStringToggle) == false)
+                evalExpressionStringToggle = true;
+            SetEvalExpressionStringToggle(evalExpressionStringToggle);
+
+            // EmbedEmptyRHStructsToggle
+            if (ConfigurationHelper.Read(Settings.EmbedEmptyRHStructsToggle, out bool embedEmptyRHStructsToggle) == false)
+                embedEmptyRHStructsToggle = false;
+            SetEmbedEmptyRHStructsToggle(embedEmptyRHStructsToggle);
 
             _updatingSettings = false;
 
@@ -531,6 +548,7 @@ namespace OpenCalligraphy.Gui.Forms
         private void SetPrototypeMetadataToggle(bool value)
         {
             _prototypeMetadataToggle = value;
+            ConfigurationHelper.Write(Settings.PrototypeMetadataToggle, value);
 
             prototypeBlueprintLabel.Visible = value;
             prototypeBlueprintTextBox.Visible = value;
@@ -545,6 +563,8 @@ namespace OpenCalligraphy.Gui.Forms
         private void SetEvalExpressionStringToggle(bool value)
         {
             _evalExpressionStringToggle = value;
+            ConfigurationHelper.Write(Settings.EvalExpressionStringToggle, value);
+
             showEvalExpressionStringsToolStripMenuItem.Checked = value;
 
             ReloadPrototype();
@@ -553,6 +573,8 @@ namespace OpenCalligraphy.Gui.Forms
         private void SetEmbedEmptyRHStructsToggle(bool value)
         {
             _embedEmptyRHStructsToggle = value;
+            ConfigurationHelper.Write(Settings.EmbedEmptyRHStructsToggle, value);
+
             embedEmptyRHStructsToolStripMenuItem.Checked = value;
 
             ReloadPrototype();
