@@ -32,6 +32,7 @@
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openPakFileToolStripMenuItem = new ToolStripMenuItem();
+            loadLocaleToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             exportToolStripMenuItem = new ToolStripMenuItem();
             exportCurveToolStripMenuItem = new ToolStripMenuItem();
@@ -61,7 +62,8 @@
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
             curveTabPage = new TabPage();
             curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
-            loadLocaleToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            pakDiffUtilityToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -79,7 +81,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1264, 24);
@@ -96,20 +98,27 @@
             // openPakFileToolStripMenuItem
             // 
             openPakFileToolStripMenuItem.Name = "openPakFileToolStripMenuItem";
-            openPakFileToolStripMenuItem.Size = new Size(180, 22);
+            openPakFileToolStripMenuItem.Size = new Size(152, 22);
             openPakFileToolStripMenuItem.Text = "Open PakFile...";
             openPakFileToolStripMenuItem.Click += openPakFileToolStripMenuItem_Click;
+            // 
+            // loadLocaleToolStripMenuItem
+            // 
+            loadLocaleToolStripMenuItem.Name = "loadLocaleToolStripMenuItem";
+            loadLocaleToolStripMenuItem.Size = new Size(152, 22);
+            loadLocaleToolStripMenuItem.Text = "Load Locale...";
+            loadLocaleToolStripMenuItem.Click += loadLocaleToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(149, 6);
             // 
             // exportToolStripMenuItem
             // 
             exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportCurveToolStripMenuItem, exportPrototypeClassesToolStripMenuItem, exportLocaleToolStripMenuItem });
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Size = new Size(152, 22);
             exportToolStripMenuItem.Text = "Export";
             // 
             // exportCurveToolStripMenuItem
@@ -136,12 +145,12 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(152, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -370,12 +379,19 @@
             curveInspectorUserControl.Size = new Size(825, 703);
             curveInspectorUserControl.TabIndex = 0;
             // 
-            // loadLocaleToolStripMenuItem
+            // toolsToolStripMenuItem
             // 
-            loadLocaleToolStripMenuItem.Name = "loadLocaleToolStripMenuItem";
-            loadLocaleToolStripMenuItem.Size = new Size(180, 22);
-            loadLocaleToolStripMenuItem.Text = "Load Locale...";
-            loadLocaleToolStripMenuItem.Click += loadLocaleToolStripMenuItem_Click;
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pakDiffUtilityToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(46, 20);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // pakDiffUtilityToolStripMenuItem
+            // 
+            pakDiffUtilityToolStripMenuItem.Name = "pakDiffUtilityToolStripMenuItem";
+            pakDiffUtilityToolStripMenuItem.Size = new Size(180, 22);
+            pakDiffUtilityToolStripMenuItem.Text = "Pak Diff Utility";
+            pakDiffUtilityToolStripMenuItem.Click += pakDiffUtilityToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -444,5 +460,7 @@
         private UserControls.CurveInspectorUserControl curveInspectorUserControl;
         private ToolStripMenuItem exportCurveToolStripMenuItem;
         private ToolStripMenuItem loadLocaleToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem pakDiffUtilityToolStripMenuItem;
     }
 }

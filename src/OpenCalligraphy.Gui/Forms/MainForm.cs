@@ -375,6 +375,11 @@ namespace OpenCalligraphy.Gui.Forms
             OpenPakFile();
         }
 
+        private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadLocale();
+        }
+
         private void exportCurveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             curveInspectorUserControl.Export();
@@ -410,9 +415,10 @@ namespace OpenCalligraphy.Gui.Forms
             Settings.SetEmbedEmptyRHStructsToggle(Settings.EmbedEmptyRHStructsToggle == false);
         }
 
-        private void loadLocaleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pakDiffUtilityToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoadLocale();
+            PakDiffUtilityForm pakDiffUtilityForm = new();
+            pakDiffUtilityForm.ShowDialog(this);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
