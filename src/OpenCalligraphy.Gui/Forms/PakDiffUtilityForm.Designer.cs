@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             pakDiffUtilityPanel = new Panel();
-            diffListView = new ListView();
+            diffDataGridView = new DataGridView();
             buttonTableLayoutPanel = new TableLayoutPanel();
             saveDiffButton = new Button();
             okButton = new Button();
@@ -42,7 +43,9 @@
             newPakFileTextBox = new TextBox();
             oldPakFileBrowseButton = new Button();
             newPakFileBrowseButton = new Button();
+            Column1 = new DataGridViewTextBoxColumn();
             pakDiffUtilityPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)diffDataGridView).BeginInit();
             buttonTableLayoutPanel.SuspendLayout();
             pakFileGroupBox.SuspendLayout();
             pakFileTableLayoutPanel.SuspendLayout();
@@ -50,24 +53,39 @@
             // 
             // pakDiffUtilityPanel
             // 
-            pakDiffUtilityPanel.Controls.Add(diffListView);
+            pakDiffUtilityPanel.Controls.Add(diffDataGridView);
             pakDiffUtilityPanel.Controls.Add(buttonTableLayoutPanel);
             pakDiffUtilityPanel.Controls.Add(pakFileGroupBox);
             pakDiffUtilityPanel.Dock = DockStyle.Fill;
             pakDiffUtilityPanel.Location = new Point(0, 0);
             pakDiffUtilityPanel.Name = "pakDiffUtilityPanel";
             pakDiffUtilityPanel.Padding = new Padding(16);
-            pakDiffUtilityPanel.Size = new Size(624, 601);
+            pakDiffUtilityPanel.Size = new Size(984, 561);
             pakDiffUtilityPanel.TabIndex = 0;
             // 
-            // diffListView
+            // diffDataGridView
             // 
-            diffListView.Dock = DockStyle.Fill;
-            diffListView.Location = new Point(16, 96);
-            diffListView.Name = "diffListView";
-            diffListView.Size = new Size(592, 460);
-            diffListView.TabIndex = 5;
-            diffListView.UseCompatibleStateImageBehavior = false;
+            diffDataGridView.AllowUserToAddRows = false;
+            diffDataGridView.AllowUserToDeleteRows = false;
+            diffDataGridView.AllowUserToResizeColumns = false;
+            diffDataGridView.AllowUserToResizeRows = false;
+            diffDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            diffDataGridView.ColumnHeadersVisible = false;
+            diffDataGridView.Columns.AddRange(new DataGridViewColumn[] { Column1 });
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            diffDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            diffDataGridView.Dock = DockStyle.Fill;
+            diffDataGridView.Location = new Point(16, 96);
+            diffDataGridView.Name = "diffDataGridView";
+            diffDataGridView.RowHeadersVisible = false;
+            diffDataGridView.Size = new Size(952, 420);
+            diffDataGridView.TabIndex = 5;
             // 
             // buttonTableLayoutPanel
             // 
@@ -81,11 +99,11 @@
             buttonTableLayoutPanel.Controls.Add(okButton, 2, 0);
             buttonTableLayoutPanel.Controls.Add(cancelButton, 3, 0);
             buttonTableLayoutPanel.Dock = DockStyle.Bottom;
-            buttonTableLayoutPanel.Location = new Point(16, 556);
+            buttonTableLayoutPanel.Location = new Point(16, 516);
             buttonTableLayoutPanel.Name = "buttonTableLayoutPanel";
             buttonTableLayoutPanel.RowCount = 1;
             buttonTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            buttonTableLayoutPanel.Size = new Size(592, 29);
+            buttonTableLayoutPanel.Size = new Size(952, 29);
             buttonTableLayoutPanel.TabIndex = 4;
             // 
             // saveDiffButton
@@ -97,21 +115,23 @@
             saveDiffButton.TabIndex = 0;
             saveDiffButton.Text = "Save";
             saveDiffButton.UseVisualStyleBackColor = true;
+            saveDiffButton.Click += saveDiffButton_Click;
             // 
             // okButton
             // 
             okButton.Dock = DockStyle.Fill;
-            okButton.Location = new Point(435, 3);
+            okButton.Location = new Point(795, 3);
             okButton.Name = "okButton";
             okButton.Size = new Size(74, 23);
             okButton.TabIndex = 1;
             okButton.Text = "Compare";
             okButton.UseVisualStyleBackColor = true;
+            okButton.Click += okButton_Click;
             // 
             // cancelButton
             // 
             cancelButton.Dock = DockStyle.Fill;
-            cancelButton.Location = new Point(515, 3);
+            cancelButton.Location = new Point(875, 3);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(74, 23);
             cancelButton.TabIndex = 2;
@@ -125,7 +145,7 @@
             pakFileGroupBox.Dock = DockStyle.Top;
             pakFileGroupBox.Location = new Point(16, 16);
             pakFileGroupBox.Name = "pakFileGroupBox";
-            pakFileGroupBox.Size = new Size(592, 80);
+            pakFileGroupBox.Size = new Size(952, 80);
             pakFileGroupBox.TabIndex = 3;
             pakFileGroupBox.TabStop = false;
             pakFileGroupBox.Text = "Pak Files";
@@ -149,7 +169,7 @@
             pakFileTableLayoutPanel.RowCount = 2;
             pakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
             pakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
-            pakFileTableLayoutPanel.Size = new Size(586, 58);
+            pakFileTableLayoutPanel.Size = new Size(946, 58);
             pakFileTableLayoutPanel.TabIndex = 1;
             // 
             // oldPakFileLabel
@@ -177,7 +197,7 @@
             oldPakFileTextBox.Dock = DockStyle.Fill;
             oldPakFileTextBox.Location = new Point(103, 3);
             oldPakFileTextBox.Name = "oldPakFileTextBox";
-            oldPakFileTextBox.Size = new Size(400, 23);
+            oldPakFileTextBox.Size = new Size(760, 23);
             oldPakFileTextBox.TabIndex = 2;
             // 
             // newPakFileTextBox
@@ -185,26 +205,35 @@
             newPakFileTextBox.Dock = DockStyle.Fill;
             newPakFileTextBox.Location = new Point(103, 32);
             newPakFileTextBox.Name = "newPakFileTextBox";
-            newPakFileTextBox.Size = new Size(400, 23);
+            newPakFileTextBox.Size = new Size(760, 23);
             newPakFileTextBox.TabIndex = 3;
             // 
             // oldPakFileBrowseButton
             // 
-            oldPakFileBrowseButton.Location = new Point(509, 3);
+            oldPakFileBrowseButton.Location = new Point(869, 3);
             oldPakFileBrowseButton.Name = "oldPakFileBrowseButton";
             oldPakFileBrowseButton.Size = new Size(74, 23);
             oldPakFileBrowseButton.TabIndex = 4;
             oldPakFileBrowseButton.Text = "Browse...";
             oldPakFileBrowseButton.UseVisualStyleBackColor = true;
+            oldPakFileBrowseButton.Click += oldPakFileBrowseButton_Click;
             // 
             // newPakFileBrowseButton
             // 
-            newPakFileBrowseButton.Location = new Point(509, 32);
+            newPakFileBrowseButton.Location = new Point(869, 32);
             newPakFileBrowseButton.Name = "newPakFileBrowseButton";
             newPakFileBrowseButton.Size = new Size(74, 23);
             newPakFileBrowseButton.TabIndex = 5;
             newPakFileBrowseButton.Text = "Browse...";
             newPakFileBrowseButton.UseVisualStyleBackColor = true;
+            newPakFileBrowseButton.Click += newPakFileBrowseButton_Click;
+            // 
+            // Column1
+            // 
+            Column1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Column1.HeaderText = "Column1";
+            Column1.Name = "Column1";
+            Column1.ReadOnly = true;
             // 
             // PakDiffUtilityForm
             // 
@@ -212,8 +241,9 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(624, 601);
+            ClientSize = new Size(984, 561);
             Controls.Add(pakDiffUtilityPanel);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "PakDiffUtilityForm";
@@ -221,6 +251,7 @@
             Text = "Pak Diff Utility";
             pakDiffUtilityPanel.ResumeLayout(false);
             pakDiffUtilityPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)diffDataGridView).EndInit();
             buttonTableLayoutPanel.ResumeLayout(false);
             pakFileGroupBox.ResumeLayout(false);
             pakFileGroupBox.PerformLayout();
@@ -244,6 +275,7 @@
         private Button saveDiffButton;
         private Button okButton;
         private Button cancelButton;
-        private ListView diffListView;
+        private DataGridView diffDataGridView;
+        private DataGridViewTextBoxColumn Column1;
     }
 }

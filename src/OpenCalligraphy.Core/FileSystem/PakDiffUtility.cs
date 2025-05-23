@@ -7,10 +7,10 @@ namespace OpenCalligraphy.Core.FileSystem
     /// </summary>
     public static class PakDiffUtility
     {
-        private const char PrefixAdded     = '+';
-        private const char PrefixRemoved   = '-';
-        private const char PrefixChanged   = '!';
-        private const char PrefixUnchanged = ' ';
+        public const char PrefixAdded     = '+';
+        public const char PrefixRemoved   = '-';
+        public const char PrefixChanged   = '!';
+        public const char PrefixUnchanged = ' ';
 
         /// <summary>
         /// Loads <see cref="PakFile"/> instances from specified file paths and compares them. The result is written to the provided <see cref="TextWriter"/>.

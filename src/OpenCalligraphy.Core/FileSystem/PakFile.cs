@@ -30,7 +30,7 @@ namespace OpenCalligraphy.Core.FileSystem
         public PakFile(string pakFilePath)
         {
             if (File.Exists(pakFilePath) == false)
-                throw new CalligraphyException($"PakFile {pakFilePath} not found.");
+                throw new CalligraphyException($"PakFile '{pakFilePath}' not found.");
 
             _name = Path.GetFileName(pakFilePath);
 
