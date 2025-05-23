@@ -80,6 +80,7 @@ namespace OpenCalligraphy.Gui.UserControls
 
         private void PopulateCurveDataGridView(Curve curve)
         {
+            curveDataGridView.Enabled = false;
             curveDataGridView.Rows.Clear();
 
             if (curve != null)
@@ -89,6 +90,7 @@ namespace OpenCalligraphy.Gui.UserControls
             }
 
             curveDataGridView.Tag = curve;
+            curveDataGridView.Enabled = true;
         }
 
         #endregion
