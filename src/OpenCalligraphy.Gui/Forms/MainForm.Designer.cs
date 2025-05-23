@@ -34,6 +34,7 @@
             openPakFileToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             exportToolStripMenuItem = new ToolStripMenuItem();
+            exportCurveToolStripMenuItem = new ToolStripMenuItem();
             exportPrototypeClassesToolStripMenuItem = new ToolStripMenuItem();
             exportLocaleToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -42,8 +43,6 @@
             showAdditionalPrototypeMetadataToolStripMenuItem = new ToolStripMenuItem();
             showEvalExpressionStringsToolStripMenuItem = new ToolStripMenuItem();
             embedEmptyRHStructsToolStripMenuItem = new ToolStripMenuItem();
-            localeToolStripMenuItem = new ToolStripMenuItem();
-            loadLocaleToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
@@ -62,7 +61,7 @@
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
             curveTabPage = new TabPage();
             curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
-            exportCurveToolStripMenuItem = new ToolStripMenuItem();
+            loadLocaleToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -80,7 +79,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, localeToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1264, 24);
@@ -89,7 +88,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openPakFileToolStripMenuItem, toolStripSeparator2, exportToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openPakFileToolStripMenuItem, loadLocaleToolStripMenuItem, toolStripSeparator2, exportToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
@@ -113,17 +112,24 @@
             exportToolStripMenuItem.Size = new Size(180, 22);
             exportToolStripMenuItem.Text = "Export";
             // 
+            // exportCurveToolStripMenuItem
+            // 
+            exportCurveToolStripMenuItem.Name = "exportCurveToolStripMenuItem";
+            exportCurveToolStripMenuItem.Size = new Size(167, 22);
+            exportCurveToolStripMenuItem.Text = "Curve";
+            exportCurveToolStripMenuItem.Click += exportCurveToolStripMenuItem_Click;
+            // 
             // exportPrototypeClassesToolStripMenuItem
             // 
             exportPrototypeClassesToolStripMenuItem.Name = "exportPrototypeClassesToolStripMenuItem";
-            exportPrototypeClassesToolStripMenuItem.Size = new Size(180, 22);
+            exportPrototypeClassesToolStripMenuItem.Size = new Size(167, 22);
             exportPrototypeClassesToolStripMenuItem.Text = "Prototype Classes";
             exportPrototypeClassesToolStripMenuItem.Click += exportPrototypeClassesToolStripMenuItem_Click;
             // 
             // exportLocaleToolStripMenuItem
             // 
             exportLocaleToolStripMenuItem.Name = "exportLocaleToolStripMenuItem";
-            exportLocaleToolStripMenuItem.Size = new Size(180, 22);
+            exportLocaleToolStripMenuItem.Size = new Size(167, 22);
             exportLocaleToolStripMenuItem.Text = "Locale";
             exportLocaleToolStripMenuItem.Click += exportLocaleToolStripMenuItem_Click;
             // 
@@ -167,20 +173,6 @@
             embedEmptyRHStructsToolStripMenuItem.Text = "Embed Empty RHStructs";
             embedEmptyRHStructsToolStripMenuItem.Click += embedEmptyRHStructsToolStripMenuItem_Click;
             // 
-            // localeToolStripMenuItem
-            // 
-            localeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { loadLocaleToolStripMenuItem });
-            localeToolStripMenuItem.Name = "localeToolStripMenuItem";
-            localeToolStripMenuItem.Size = new Size(53, 20);
-            localeToolStripMenuItem.Text = "Locale";
-            // 
-            // loadLocaleToolStripMenuItem
-            // 
-            loadLocaleToolStripMenuItem.Name = "loadLocaleToolStripMenuItem";
-            loadLocaleToolStripMenuItem.Size = new Size(146, 22);
-            loadLocaleToolStripMenuItem.Text = "Load Locale...";
-            loadLocaleToolStripMenuItem.Click += loadLocaleToolStripMenuItem_Click;
-            // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
@@ -191,7 +183,7 @@
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(116, 22);
+            aboutToolStripMenuItem.Size = new Size(180, 22);
             aboutToolStripMenuItem.Text = "About...";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -378,12 +370,12 @@
             curveInspectorUserControl.Size = new Size(825, 703);
             curveInspectorUserControl.TabIndex = 0;
             // 
-            // exportCurveToolStripMenuItem
+            // loadLocaleToolStripMenuItem
             // 
-            exportCurveToolStripMenuItem.Name = "exportCurveToolStripMenuItem";
-            exportCurveToolStripMenuItem.Size = new Size(180, 22);
-            exportCurveToolStripMenuItem.Text = "Curve";
-            exportCurveToolStripMenuItem.Click += exportCurveToolStripMenuItem_Click;
+            loadLocaleToolStripMenuItem.Name = "loadLocaleToolStripMenuItem";
+            loadLocaleToolStripMenuItem.Size = new Size(180, 22);
+            loadLocaleToolStripMenuItem.Text = "Load Locale...";
+            loadLocaleToolStripMenuItem.Click += loadLocaleToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -441,8 +433,6 @@
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem showAdditionalPrototypeMetadataToolStripMenuItem;
         private Button fileSearchClearButton;
-        private ToolStripMenuItem localeToolStripMenuItem;
-        private ToolStripMenuItem loadLocaleToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem exportToolStripMenuItem;
         private ToolStripMenuItem exportPrototypeClassesToolStripMenuItem;
@@ -453,5 +443,6 @@
         private TabPage curveTabPage;
         private UserControls.CurveInspectorUserControl curveInspectorUserControl;
         private ToolStripMenuItem exportCurveToolStripMenuItem;
+        private ToolStripMenuItem loadLocaleToolStripMenuItem;
     }
 }
