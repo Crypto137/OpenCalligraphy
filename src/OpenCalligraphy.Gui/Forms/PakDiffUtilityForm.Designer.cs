@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             pakDiffUtilityPanel = new Panel();
             diffDataGridView = new DataGridView();
             Column1 = new DataGridViewTextBoxColumn();
@@ -44,6 +44,7 @@
             saveDiffButton = new Button();
             okButton = new Button();
             cancelButton = new Button();
+            saveFilteredButton = new Button();
             pakFileGroupBox = new GroupBox();
             pakFileTableLayoutPanel = new TableLayoutPanel();
             oldPakFileLabel = new Label();
@@ -83,14 +84,14 @@
             diffDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             diffDataGridView.ColumnHeadersVisible = false;
             diffDataGridView.Columns.AddRange(new DataGridViewColumn[] { Column1 });
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Window;
-            dataGridViewCellStyle3.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            diffDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            diffDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
             diffDataGridView.Dock = DockStyle.Fill;
             diffDataGridView.Location = new Point(16, 125);
             diffDataGridView.Name = "diffDataGridView";
@@ -213,14 +214,16 @@
             // buttonTableLayoutPanel
             // 
             buttonTableLayoutPanel.AutoSize = true;
-            buttonTableLayoutPanel.ColumnCount = 4;
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            buttonTableLayoutPanel.ColumnCount = 5;
+            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
             buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
             buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
             buttonTableLayoutPanel.Controls.Add(saveDiffButton, 0, 0);
-            buttonTableLayoutPanel.Controls.Add(okButton, 2, 0);
-            buttonTableLayoutPanel.Controls.Add(cancelButton, 3, 0);
+            buttonTableLayoutPanel.Controls.Add(okButton, 3, 0);
+            buttonTableLayoutPanel.Controls.Add(cancelButton, 4, 0);
+            buttonTableLayoutPanel.Controls.Add(saveFilteredButton, 1, 0);
             buttonTableLayoutPanel.Dock = DockStyle.Top;
             buttonTableLayoutPanel.Location = new Point(16, 96);
             buttonTableLayoutPanel.Name = "buttonTableLayoutPanel";
@@ -235,9 +238,9 @@
             saveDiffButton.Enabled = false;
             saveDiffButton.Location = new Point(3, 3);
             saveDiffButton.Name = "saveDiffButton";
-            saveDiffButton.Size = new Size(74, 23);
+            saveDiffButton.Size = new Size(94, 23);
             saveDiffButton.TabIndex = 0;
-            saveDiffButton.Text = "Save";
+            saveDiffButton.Text = "Save All";
             saveDiffButton.UseVisualStyleBackColor = true;
             saveDiffButton.Click += saveDiffButton_Click;
             // 
@@ -261,6 +264,18 @@
             cancelButton.TabIndex = 2;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
+            // 
+            // saveFilteredButton
+            // 
+            saveFilteredButton.Dock = DockStyle.Fill;
+            saveFilteredButton.Enabled = false;
+            saveFilteredButton.Location = new Point(103, 3);
+            saveFilteredButton.Name = "saveFilteredButton";
+            saveFilteredButton.Size = new Size(94, 23);
+            saveFilteredButton.TabIndex = 3;
+            saveFilteredButton.Text = "Save Filtered";
+            saveFilteredButton.UseVisualStyleBackColor = true;
+            saveFilteredButton.Click += saveFilteredButton_Click;
             // 
             // pakFileGroupBox
             // 
@@ -405,5 +420,6 @@
         private CheckBox filterChangedCheckBox;
         private TextBox filterTextBox;
         private Button clearFilterButton;
+        private Button saveFilteredButton;
     }
 }

@@ -1,4 +1,5 @@
-﻿using OpenCalligraphy.Core.FileSystem;
+﻿using System.Text;
+using OpenCalligraphy.Core.FileSystem;
 using OpenCalligraphy.Core.Helpers;
 using OpenCalligraphy.Gui.Helpers;
 
@@ -54,6 +55,7 @@ namespace OpenCalligraphy.Gui.Forms
             // Toggle controls
             bool hasDiff = string.IsNullOrWhiteSpace(_diffText) == false;
             saveDiffButton.Enabled = hasDiff;
+            saveFilteredButton.Enabled = hasDiff;
             filterGroupBox.Enabled = hasDiff;
         }
 
@@ -114,7 +116,7 @@ namespace OpenCalligraphy.Gui.Forms
             diffDataGridView.Enabled = true;
         }
 
-        private void SaveDiff()
+        private void SaveDiff(bool applyFilter)
         {
             using SaveFileDialog dialog = new();
             dialog.Filter = "Text file (*.txt)|*.txt|All files (*.*)|*.*";
@@ -124,7 +126,8 @@ namespace OpenCalligraphy.Gui.Forms
                 return;
 
             string filePath = dialog.FileName;
-            FileHelper.WriteTextFile(filePath, _diffText);
+            string diffText = applyFilter ? BuildFilteredDiff() : _diffText;
+            FileHelper.WriteTextFile(filePath, diffText);
 
             MessageBox.Show($"Saved comparison to '{filePath}'.", "Pak Diff Utility", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -160,6 +163,25 @@ namespace OpenCalligraphy.Gui.Forms
             filterAddedCheckBox.Checked = true;
             filterRemovedCheckBox.Checked = true;
             filterChangedCheckBox.Checked = true;
+        }
+
+        private string BuildFilteredDiff()
+        {
+            StringBuilder sb = new();
+
+            for (int i = 0; i < diffDataGridView.Rows.Count; i++)
+            {
+                DataGridViewCellCollection cells = diffDataGridView.Rows[i].Cells;
+                if (cells.Count == 0)
+                    continue;
+
+                if (cells[0].Value is not string line)
+                    continue;
+
+                sb.AppendLine(line);
+            }
+
+            return sb.ToString();
         }
 
         #region Event Handlers
@@ -202,7 +224,12 @@ namespace OpenCalligraphy.Gui.Forms
 
         private void saveDiffButton_Click(object sender, EventArgs e)
         {
-            SaveDiff();
+            SaveDiff(false);
+        }
+
+        private void saveFilteredButton_Click(object sender, EventArgs e)
+        {
+            SaveDiff(true);
         }
 
         #endregion
