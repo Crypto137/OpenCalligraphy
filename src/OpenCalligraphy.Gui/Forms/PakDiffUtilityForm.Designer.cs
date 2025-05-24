@@ -28,14 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pakDiffUtilityPanel = new Panel();
-            filterFlowLayoutPanel = new FlowLayoutPanel();
-            filterAddedCheckBox = new CheckBox();
-            filterRemovedCheckBox = new CheckBox();
-            filterChangedCheckBox = new CheckBox();
             diffDataGridView = new DataGridView();
             Column1 = new DataGridViewTextBoxColumn();
+            filterGroupBox = new GroupBox();
+            filterTableLayoutPanel = new TableLayoutPanel();
+            filterAddedCheckBox = new CheckBox();
+            filterButton = new Button();
+            filterRemovedCheckBox = new CheckBox();
+            filterChangedCheckBox = new CheckBox();
+            filterTextBox = new TextBox();
+            clearFilterButton = new Button();
             buttonTableLayoutPanel = new TableLayoutPanel();
             saveDiffButton = new Button();
             okButton = new Button();
@@ -49,8 +53,9 @@
             oldPakFileBrowseButton = new Button();
             newPakFileBrowseButton = new Button();
             pakDiffUtilityPanel.SuspendLayout();
-            filterFlowLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)diffDataGridView).BeginInit();
+            filterGroupBox.SuspendLayout();
+            filterTableLayoutPanel.SuspendLayout();
             buttonTableLayoutPanel.SuspendLayout();
             pakFileGroupBox.SuspendLayout();
             pakFileTableLayoutPanel.SuspendLayout();
@@ -59,7 +64,7 @@
             // pakDiffUtilityPanel
             // 
             pakDiffUtilityPanel.Controls.Add(diffDataGridView);
-            pakDiffUtilityPanel.Controls.Add(filterFlowLayoutPanel);
+            pakDiffUtilityPanel.Controls.Add(filterGroupBox);
             pakDiffUtilityPanel.Controls.Add(buttonTableLayoutPanel);
             pakDiffUtilityPanel.Controls.Add(pakFileGroupBox);
             pakDiffUtilityPanel.Dock = DockStyle.Fill;
@@ -68,57 +73,6 @@
             pakDiffUtilityPanel.Padding = new Padding(16);
             pakDiffUtilityPanel.Size = new Size(984, 561);
             pakDiffUtilityPanel.TabIndex = 0;
-            // 
-            // filterFlowLayoutPanel
-            // 
-            filterFlowLayoutPanel.AutoSize = true;
-            filterFlowLayoutPanel.Controls.Add(filterAddedCheckBox);
-            filterFlowLayoutPanel.Controls.Add(filterRemovedCheckBox);
-            filterFlowLayoutPanel.Controls.Add(filterChangedCheckBox);
-            filterFlowLayoutPanel.Dock = DockStyle.Top;
-            filterFlowLayoutPanel.Location = new Point(16, 96);
-            filterFlowLayoutPanel.Name = "filterFlowLayoutPanel";
-            filterFlowLayoutPanel.Size = new Size(952, 25);
-            filterFlowLayoutPanel.TabIndex = 6;
-            // 
-            // filterAddedCheckBox
-            // 
-            filterAddedCheckBox.AutoSize = true;
-            filterAddedCheckBox.Checked = true;
-            filterAddedCheckBox.CheckState = CheckState.Checked;
-            filterAddedCheckBox.Location = new Point(3, 3);
-            filterAddedCheckBox.Name = "filterAddedCheckBox";
-            filterAddedCheckBox.Size = new Size(61, 19);
-            filterAddedCheckBox.TabIndex = 0;
-            filterAddedCheckBox.Text = "Added";
-            filterAddedCheckBox.UseVisualStyleBackColor = true;
-            filterAddedCheckBox.CheckedChanged += filterAddedCheckBox_CheckedChanged;
-            // 
-            // filterRemovedCheckBox
-            // 
-            filterRemovedCheckBox.AutoSize = true;
-            filterRemovedCheckBox.Checked = true;
-            filterRemovedCheckBox.CheckState = CheckState.Checked;
-            filterRemovedCheckBox.Location = new Point(70, 3);
-            filterRemovedCheckBox.Name = "filterRemovedCheckBox";
-            filterRemovedCheckBox.Size = new Size(76, 19);
-            filterRemovedCheckBox.TabIndex = 1;
-            filterRemovedCheckBox.Text = "Removed";
-            filterRemovedCheckBox.UseVisualStyleBackColor = true;
-            filterRemovedCheckBox.CheckedChanged += filterRemovedCheckBox_CheckedChanged;
-            // 
-            // filterChangedCheckBox
-            // 
-            filterChangedCheckBox.AutoSize = true;
-            filterChangedCheckBox.Checked = true;
-            filterChangedCheckBox.CheckState = CheckState.Checked;
-            filterChangedCheckBox.Location = new Point(152, 3);
-            filterChangedCheckBox.Name = "filterChangedCheckBox";
-            filterChangedCheckBox.Size = new Size(74, 19);
-            filterChangedCheckBox.TabIndex = 2;
-            filterChangedCheckBox.Text = "Changed";
-            filterChangedCheckBox.UseVisualStyleBackColor = true;
-            filterChangedCheckBox.CheckedChanged += filterChangedCheckBox_CheckedChanged;
             // 
             // diffDataGridView
             // 
@@ -129,19 +83,19 @@
             diffDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             diffDataGridView.ColumnHeadersVisible = false;
             diffDataGridView.Columns.AddRange(new DataGridViewColumn[] { Column1 });
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            diffDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            diffDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
             diffDataGridView.Dock = DockStyle.Fill;
-            diffDataGridView.Location = new Point(16, 121);
+            diffDataGridView.Location = new Point(16, 125);
             diffDataGridView.Name = "diffDataGridView";
             diffDataGridView.RowHeadersVisible = false;
-            diffDataGridView.Size = new Size(952, 395);
+            diffDataGridView.Size = new Size(952, 369);
             diffDataGridView.TabIndex = 5;
             // 
             // Column1
@@ -150,6 +104,111 @@
             Column1.HeaderText = "Column1";
             Column1.Name = "Column1";
             Column1.ReadOnly = true;
+            // 
+            // filterGroupBox
+            // 
+            filterGroupBox.AutoSize = true;
+            filterGroupBox.Controls.Add(filterTableLayoutPanel);
+            filterGroupBox.Dock = DockStyle.Bottom;
+            filterGroupBox.Enabled = false;
+            filterGroupBox.Location = new Point(16, 494);
+            filterGroupBox.Name = "filterGroupBox";
+            filterGroupBox.Size = new Size(952, 51);
+            filterGroupBox.TabIndex = 7;
+            filterGroupBox.TabStop = false;
+            filterGroupBox.Text = "Filter";
+            // 
+            // filterTableLayoutPanel
+            // 
+            filterTableLayoutPanel.AutoSize = true;
+            filterTableLayoutPanel.ColumnCount = 6;
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            filterTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            filterTableLayoutPanel.Controls.Add(filterAddedCheckBox, 2, 0);
+            filterTableLayoutPanel.Controls.Add(filterButton, 5, 0);
+            filterTableLayoutPanel.Controls.Add(filterRemovedCheckBox, 3, 0);
+            filterTableLayoutPanel.Controls.Add(filterChangedCheckBox, 4, 0);
+            filterTableLayoutPanel.Controls.Add(filterTextBox, 1, 0);
+            filterTableLayoutPanel.Controls.Add(clearFilterButton, 0, 0);
+            filterTableLayoutPanel.Dock = DockStyle.Fill;
+            filterTableLayoutPanel.Location = new Point(3, 19);
+            filterTableLayoutPanel.Name = "filterTableLayoutPanel";
+            filterTableLayoutPanel.RowCount = 1;
+            filterTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            filterTableLayoutPanel.Size = new Size(946, 29);
+            filterTableLayoutPanel.TabIndex = 0;
+            // 
+            // filterAddedCheckBox
+            // 
+            filterAddedCheckBox.Anchor = AnchorStyles.Left;
+            filterAddedCheckBox.AutoSize = true;
+            filterAddedCheckBox.Checked = true;
+            filterAddedCheckBox.CheckState = CheckState.Checked;
+            filterAddedCheckBox.Location = new Point(640, 5);
+            filterAddedCheckBox.Name = "filterAddedCheckBox";
+            filterAddedCheckBox.Size = new Size(61, 19);
+            filterAddedCheckBox.TabIndex = 0;
+            filterAddedCheckBox.Text = "Added";
+            filterAddedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // filterButton
+            // 
+            filterButton.Location = new Point(869, 3);
+            filterButton.Name = "filterButton";
+            filterButton.Size = new Size(74, 23);
+            filterButton.TabIndex = 0;
+            filterButton.Text = "Filter";
+            filterButton.UseVisualStyleBackColor = true;
+            filterButton.Click += filterButton_Click;
+            // 
+            // filterRemovedCheckBox
+            // 
+            filterRemovedCheckBox.Anchor = AnchorStyles.Left;
+            filterRemovedCheckBox.AutoSize = true;
+            filterRemovedCheckBox.Checked = true;
+            filterRemovedCheckBox.CheckState = CheckState.Checked;
+            filterRemovedCheckBox.Location = new Point(707, 5);
+            filterRemovedCheckBox.Name = "filterRemovedCheckBox";
+            filterRemovedCheckBox.Size = new Size(76, 19);
+            filterRemovedCheckBox.TabIndex = 1;
+            filterRemovedCheckBox.Text = "Removed";
+            filterRemovedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // filterChangedCheckBox
+            // 
+            filterChangedCheckBox.Anchor = AnchorStyles.Left;
+            filterChangedCheckBox.AutoSize = true;
+            filterChangedCheckBox.Checked = true;
+            filterChangedCheckBox.CheckState = CheckState.Checked;
+            filterChangedCheckBox.Location = new Point(789, 5);
+            filterChangedCheckBox.Name = "filterChangedCheckBox";
+            filterChangedCheckBox.Size = new Size(74, 19);
+            filterChangedCheckBox.TabIndex = 4;
+            filterChangedCheckBox.Text = "Changed";
+            filterChangedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // filterTextBox
+            // 
+            filterTextBox.Dock = DockStyle.Fill;
+            filterTextBox.Location = new Point(32, 3);
+            filterTextBox.Name = "filterTextBox";
+            filterTextBox.Size = new Size(602, 23);
+            filterTextBox.TabIndex = 5;
+            filterTextBox.KeyDown += filterTextBox_KeyDown;
+            // 
+            // clearFilterButton
+            // 
+            clearFilterButton.Location = new Point(3, 3);
+            clearFilterButton.Name = "clearFilterButton";
+            clearFilterButton.Size = new Size(23, 23);
+            clearFilterButton.TabIndex = 6;
+            clearFilterButton.Text = "✖";
+            clearFilterButton.UseVisualStyleBackColor = true;
+            clearFilterButton.Click += clearFilterButton_Click;
             // 
             // buttonTableLayoutPanel
             // 
@@ -162,8 +221,8 @@
             buttonTableLayoutPanel.Controls.Add(saveDiffButton, 0, 0);
             buttonTableLayoutPanel.Controls.Add(okButton, 2, 0);
             buttonTableLayoutPanel.Controls.Add(cancelButton, 3, 0);
-            buttonTableLayoutPanel.Dock = DockStyle.Bottom;
-            buttonTableLayoutPanel.Location = new Point(16, 516);
+            buttonTableLayoutPanel.Dock = DockStyle.Top;
+            buttonTableLayoutPanel.Location = new Point(16, 96);
             buttonTableLayoutPanel.Name = "buttonTableLayoutPanel";
             buttonTableLayoutPanel.RowCount = 1;
             buttonTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -173,6 +232,7 @@
             // saveDiffButton
             // 
             saveDiffButton.Dock = DockStyle.Fill;
+            saveDiffButton.Enabled = false;
             saveDiffButton.Location = new Point(3, 3);
             saveDiffButton.Name = "saveDiffButton";
             saveDiffButton.Size = new Size(74, 23);
@@ -294,7 +354,6 @@
             // 
             // PakDiffUtilityForm
             // 
-            AcceptButton = okButton;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
@@ -308,9 +367,11 @@
             Text = "Pak Diff Utility";
             pakDiffUtilityPanel.ResumeLayout(false);
             pakDiffUtilityPanel.PerformLayout();
-            filterFlowLayoutPanel.ResumeLayout(false);
-            filterFlowLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)diffDataGridView).EndInit();
+            filterGroupBox.ResumeLayout(false);
+            filterGroupBox.PerformLayout();
+            filterTableLayoutPanel.ResumeLayout(false);
+            filterTableLayoutPanel.PerformLayout();
             buttonTableLayoutPanel.ResumeLayout(false);
             pakFileGroupBox.ResumeLayout(false);
             pakFileGroupBox.PerformLayout();
@@ -336,9 +397,13 @@
         private Button cancelButton;
         private DataGridView diffDataGridView;
         private DataGridViewTextBoxColumn Column1;
-        private FlowLayoutPanel filterFlowLayoutPanel;
+        private GroupBox filterGroupBox;
+        private TableLayoutPanel filterTableLayoutPanel;
         private CheckBox filterAddedCheckBox;
+        private Button filterButton;
         private CheckBox filterRemovedCheckBox;
         private CheckBox filterChangedCheckBox;
+        private TextBox filterTextBox;
+        private Button clearFilterButton;
     }
 }

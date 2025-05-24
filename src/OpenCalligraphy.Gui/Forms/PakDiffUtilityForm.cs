@@ -10,7 +10,6 @@ namespace OpenCalligraphy.Gui.Forms
         Added   = 1 << 0,
         Removed = 1 << 1,
         Changed = 1 << 2,
-        All     = -1
     }
 
     public partial class PakDiffUtilityForm : Form
@@ -20,7 +19,6 @@ namespace OpenCalligraphy.Gui.Forms
         private static readonly Color ChangedColor = Color.FromArgb(231, 231, 152);
 
         private string _diffText = string.Empty;
-        private DiffFlags _visibilityFlags = DiffFlags.All;
 
         public PakDiffUtilityForm()
         {
@@ -52,10 +50,31 @@ namespace OpenCalligraphy.Gui.Forms
             PakDiffUtility.Diff(oldFilePath, newFilePath, outputWriter);
 
             _diffText = outputWriter.ToString();
+
+            // Toggle controls
+            bool hasDiff = string.IsNullOrWhiteSpace(_diffText) == false;
+            saveDiffButton.Enabled = hasDiff;
+            filterGroupBox.Enabled = hasDiff;
         }
 
-        private void DisplayDiff()
+        private void DisplayDiff(bool applyFilter)
         {
+            if (string.IsNullOrWhiteSpace(_diffText))
+            {
+                diffDataGridView.Enabled = false;
+                diffDataGridView.Rows.Clear();
+                diffDataGridView.Enabled = true;
+
+                MessageBox.Show("No differences found in the specified pak files.", "Pak Diff Utility", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string filterPattern = default;
+            DiffFlags filterFlags = default;
+
+            if (applyFilter)
+                GetFilterSettings(out filterPattern, out filterFlags);
+
             diffDataGridView.Enabled = false;
             diffDataGridView.Rows.Clear();
 
@@ -63,22 +82,25 @@ namespace OpenCalligraphy.Gui.Forms
             {
                 Color? color = null;
 
+                if (applyFilter && string.IsNullOrWhiteSpace(filterPattern) == false && line.Contains(filterPattern, StringComparison.OrdinalIgnoreCase) == false)
+                    continue;
+
                 switch (line[0])
                 {
                     case PakDiffUtility.PrefixAdded:
-                        if (_visibilityFlags.HasFlag(DiffFlags.Added) == false)
+                        if (applyFilter && filterFlags.HasFlag(DiffFlags.Added) == false)
                             continue;
                         color = AddedColor;
                         break;
 
                     case PakDiffUtility.PrefixRemoved:
-                        if (_visibilityFlags.HasFlag(DiffFlags.Removed) == false)
+                        if (applyFilter && filterFlags.HasFlag(DiffFlags.Removed) == false)
                             continue;
                         color = RemovedColor;
                         break;
 
                     case PakDiffUtility.PrefixChanged:
-                        if (_visibilityFlags.HasFlag(DiffFlags.Changed) == false)
+                        if (applyFilter && filterFlags.HasFlag(DiffFlags.Changed) == false)
                             continue;
                         color = ChangedColor;
                         break;
@@ -107,18 +129,37 @@ namespace OpenCalligraphy.Gui.Forms
             MessageBox.Show($"Saved comparison to '{filePath}'.", "Pak Diff Utility", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void SetVisibilityFlag(DiffFlags flag, bool value)
+        private void ApplyFilter()
         {
-            if (value)
-                _visibilityFlags |= flag;
-            else
-                _visibilityFlags &= ~flag;
+            if (string.IsNullOrWhiteSpace(_diffText))
+                return;
 
-            if (string.IsNullOrWhiteSpace(_diffText) == false)
-            {
-                SlowActionForm.ExecuteActions(this,
-                    new SlowActionForm.ActionData("Filtering...", "Building data grid...", () => DisplayDiff()));
-            }
+            SlowActionForm.ExecuteActions(this,
+                new SlowActionForm.ActionData("Filtering...", "Applying filter...", () => DisplayDiff(true)));
+        }
+
+        private void GetFilterSettings(out string pattern, out DiffFlags flags)
+        {
+            pattern = filterTextBox.Text;
+
+            flags = DiffFlags.None;
+
+            if (filterAddedCheckBox.Checked)
+                flags |= DiffFlags.Added;
+
+            if (filterRemovedCheckBox.Checked)
+                flags |= DiffFlags.Removed;
+
+            if (filterChangedCheckBox.Checked)
+                flags |= DiffFlags.Changed;
+        }
+
+        private void ClearFilterSettings()
+        {
+            filterTextBox.Text = string.Empty;
+            filterAddedCheckBox.Checked = true;
+            filterRemovedCheckBox.Checked = true;
+            filterChangedCheckBox.Checked = true;
         }
 
         #region Event Handlers
@@ -135,26 +176,28 @@ namespace OpenCalligraphy.Gui.Forms
                 newPakFileTextBox.Text = filePath;
         }
 
-        private void filterAddedCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void filterButton_Click(object sender, EventArgs e)
         {
-            SetVisibilityFlag(DiffFlags.Added, filterAddedCheckBox.Checked);
+            ApplyFilter();
         }
 
-        private void filterRemovedCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void clearFilterButton_Click(object sender, EventArgs e)
         {
-            SetVisibilityFlag(DiffFlags.Removed, filterRemovedCheckBox.Checked);
+            ClearFilterSettings();
+            ApplyFilter();
         }
 
-        private void filterChangedCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void filterTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            SetVisibilityFlag(DiffFlags.Changed, filterChangedCheckBox.Checked);
+            if (e.KeyCode == Keys.Enter)
+                ApplyFilter();
         }
 
         private void okButton_Click(object sender, EventArgs e)
         {
             SlowActionForm.ExecuteActions(this,
                 new("Comparing...", "Comparing files...",    () => DoDiff()),
-                new("Filtering...", "Building data grid...", () => DisplayDiff()));
+                new("Comparing...", "Building data grid...", () => DisplayDiff(false)));
         }
 
         private void saveDiffButton_Click(object sender, EventArgs e)
