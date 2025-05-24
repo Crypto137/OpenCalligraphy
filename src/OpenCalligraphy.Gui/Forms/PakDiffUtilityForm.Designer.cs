@@ -40,39 +40,41 @@
             filterChangedCheckBox = new CheckBox();
             filterTextBox = new TextBox();
             clearFilterButton = new Button();
-            buttonTableLayoutPanel = new TableLayoutPanel();
-            saveDiffButton = new Button();
-            okButton = new Button();
+            comparisonGroupBox = new GroupBox();
+            comparisonButtonTableLayoutPanel = new TableLayoutPanel();
+            compareButton = new Button();
             cancelButton = new Button();
-            saveFilteredButton = new Button();
-            pakFileGroupBox = new GroupBox();
-            pakFileTableLayoutPanel = new TableLayoutPanel();
+            comparisonPakFileTableLayoutPanel = new TableLayoutPanel();
             oldPakFileLabel = new Label();
             newPakFileLabel = new Label();
             oldPakFileTextBox = new TextBox();
             newPakFileTextBox = new TextBox();
             oldPakFileBrowseButton = new Button();
             newPakFileBrowseButton = new Button();
+            diffButtonTableLayoutPanel = new TableLayoutPanel();
+            saveDiffButton = new Button();
+            saveFilteredButton = new Button();
             pakDiffUtilityPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)diffDataGridView).BeginInit();
             filterGroupBox.SuspendLayout();
             filterTableLayoutPanel.SuspendLayout();
-            buttonTableLayoutPanel.SuspendLayout();
-            pakFileGroupBox.SuspendLayout();
-            pakFileTableLayoutPanel.SuspendLayout();
+            comparisonGroupBox.SuspendLayout();
+            comparisonButtonTableLayoutPanel.SuspendLayout();
+            comparisonPakFileTableLayoutPanel.SuspendLayout();
+            diffButtonTableLayoutPanel.SuspendLayout();
             SuspendLayout();
             // 
             // pakDiffUtilityPanel
             // 
             pakDiffUtilityPanel.Controls.Add(diffDataGridView);
             pakDiffUtilityPanel.Controls.Add(filterGroupBox);
-            pakDiffUtilityPanel.Controls.Add(buttonTableLayoutPanel);
-            pakDiffUtilityPanel.Controls.Add(pakFileGroupBox);
+            pakDiffUtilityPanel.Controls.Add(comparisonGroupBox);
+            pakDiffUtilityPanel.Controls.Add(diffButtonTableLayoutPanel);
             pakDiffUtilityPanel.Dock = DockStyle.Fill;
             pakDiffUtilityPanel.Location = new Point(0, 0);
             pakDiffUtilityPanel.Name = "pakDiffUtilityPanel";
             pakDiffUtilityPanel.Padding = new Padding(16);
-            pakDiffUtilityPanel.Size = new Size(984, 561);
+            pakDiffUtilityPanel.Size = new Size(984, 661);
             pakDiffUtilityPanel.TabIndex = 0;
             // 
             // diffDataGridView
@@ -96,7 +98,7 @@
             diffDataGridView.Location = new Point(16, 125);
             diffDataGridView.Name = "diffDataGridView";
             diffDataGridView.RowHeadersVisible = false;
-            diffDataGridView.Size = new Size(952, 369);
+            diffDataGridView.Size = new Size(952, 440);
             diffDataGridView.TabIndex = 5;
             // 
             // Column1
@@ -112,7 +114,7 @@
             filterGroupBox.Controls.Add(filterTableLayoutPanel);
             filterGroupBox.Dock = DockStyle.Bottom;
             filterGroupBox.Enabled = false;
-            filterGroupBox.Location = new Point(16, 494);
+            filterGroupBox.Location = new Point(16, 565);
             filterGroupBox.Name = "filterGroupBox";
             filterGroupBox.Size = new Size(952, 51);
             filterGroupBox.TabIndex = 7;
@@ -211,105 +213,78 @@
             clearFilterButton.UseVisualStyleBackColor = true;
             clearFilterButton.Click += clearFilterButton_Click;
             // 
-            // buttonTableLayoutPanel
+            // comparisonGroupBox
             // 
-            buttonTableLayoutPanel.AutoSize = true;
-            buttonTableLayoutPanel.ColumnCount = 5;
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
-            buttonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
-            buttonTableLayoutPanel.Controls.Add(saveDiffButton, 0, 0);
-            buttonTableLayoutPanel.Controls.Add(okButton, 3, 0);
-            buttonTableLayoutPanel.Controls.Add(cancelButton, 4, 0);
-            buttonTableLayoutPanel.Controls.Add(saveFilteredButton, 1, 0);
-            buttonTableLayoutPanel.Dock = DockStyle.Top;
-            buttonTableLayoutPanel.Location = new Point(16, 96);
-            buttonTableLayoutPanel.Name = "buttonTableLayoutPanel";
-            buttonTableLayoutPanel.RowCount = 1;
-            buttonTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            buttonTableLayoutPanel.Size = new Size(952, 29);
-            buttonTableLayoutPanel.TabIndex = 4;
+            comparisonGroupBox.AutoSize = true;
+            comparisonGroupBox.Controls.Add(comparisonButtonTableLayoutPanel);
+            comparisonGroupBox.Controls.Add(comparisonPakFileTableLayoutPanel);
+            comparisonGroupBox.Dock = DockStyle.Top;
+            comparisonGroupBox.Location = new Point(16, 16);
+            comparisonGroupBox.Name = "comparisonGroupBox";
+            comparisonGroupBox.Size = new Size(952, 109);
+            comparisonGroupBox.TabIndex = 3;
+            comparisonGroupBox.TabStop = false;
+            comparisonGroupBox.Text = "Comparison";
             // 
-            // saveDiffButton
+            // comparisonButtonTableLayoutPanel
             // 
-            saveDiffButton.Dock = DockStyle.Fill;
-            saveDiffButton.Enabled = false;
-            saveDiffButton.Location = new Point(3, 3);
-            saveDiffButton.Name = "saveDiffButton";
-            saveDiffButton.Size = new Size(94, 23);
-            saveDiffButton.TabIndex = 0;
-            saveDiffButton.Text = "Save All";
-            saveDiffButton.UseVisualStyleBackColor = true;
-            saveDiffButton.Click += saveDiffButton_Click;
+            comparisonButtonTableLayoutPanel.AutoSize = true;
+            comparisonButtonTableLayoutPanel.ColumnCount = 3;
+            comparisonButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            comparisonButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            comparisonButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            comparisonButtonTableLayoutPanel.Controls.Add(compareButton, 1, 0);
+            comparisonButtonTableLayoutPanel.Controls.Add(cancelButton, 2, 0);
+            comparisonButtonTableLayoutPanel.Dock = DockStyle.Top;
+            comparisonButtonTableLayoutPanel.Location = new Point(3, 77);
+            comparisonButtonTableLayoutPanel.Name = "comparisonButtonTableLayoutPanel";
+            comparisonButtonTableLayoutPanel.RowCount = 1;
+            comparisonButtonTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            comparisonButtonTableLayoutPanel.Size = new Size(946, 29);
+            comparisonButtonTableLayoutPanel.TabIndex = 2;
             // 
-            // okButton
+            // compareButton
             // 
-            okButton.Dock = DockStyle.Fill;
-            okButton.Location = new Point(795, 3);
-            okButton.Name = "okButton";
-            okButton.Size = new Size(74, 23);
-            okButton.TabIndex = 1;
-            okButton.Text = "Compare";
-            okButton.UseVisualStyleBackColor = true;
-            okButton.Click += okButton_Click;
+            compareButton.Dock = DockStyle.Fill;
+            compareButton.Location = new Point(789, 3);
+            compareButton.Name = "compareButton";
+            compareButton.Size = new Size(74, 23);
+            compareButton.TabIndex = 0;
+            compareButton.Text = "Compare";
+            compareButton.UseVisualStyleBackColor = true;
+            compareButton.Click += compareButton_Click;
             // 
             // cancelButton
             // 
             cancelButton.Dock = DockStyle.Fill;
-            cancelButton.Location = new Point(875, 3);
+            cancelButton.Location = new Point(869, 3);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(74, 23);
-            cancelButton.TabIndex = 2;
+            cancelButton.TabIndex = 1;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
             // 
-            // saveFilteredButton
+            // comparisonPakFileTableLayoutPanel
             // 
-            saveFilteredButton.Dock = DockStyle.Fill;
-            saveFilteredButton.Enabled = false;
-            saveFilteredButton.Location = new Point(103, 3);
-            saveFilteredButton.Name = "saveFilteredButton";
-            saveFilteredButton.Size = new Size(94, 23);
-            saveFilteredButton.TabIndex = 3;
-            saveFilteredButton.Text = "Save Filtered";
-            saveFilteredButton.UseVisualStyleBackColor = true;
-            saveFilteredButton.Click += saveFilteredButton_Click;
-            // 
-            // pakFileGroupBox
-            // 
-            pakFileGroupBox.AutoSize = true;
-            pakFileGroupBox.Controls.Add(pakFileTableLayoutPanel);
-            pakFileGroupBox.Dock = DockStyle.Top;
-            pakFileGroupBox.Location = new Point(16, 16);
-            pakFileGroupBox.Name = "pakFileGroupBox";
-            pakFileGroupBox.Size = new Size(952, 80);
-            pakFileGroupBox.TabIndex = 3;
-            pakFileGroupBox.TabStop = false;
-            pakFileGroupBox.Text = "Pak Files";
-            // 
-            // pakFileTableLayoutPanel
-            // 
-            pakFileTableLayoutPanel.AutoSize = true;
-            pakFileTableLayoutPanel.ColumnCount = 3;
-            pakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
-            pakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            pakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
-            pakFileTableLayoutPanel.Controls.Add(oldPakFileLabel, 0, 0);
-            pakFileTableLayoutPanel.Controls.Add(newPakFileLabel, 0, 1);
-            pakFileTableLayoutPanel.Controls.Add(oldPakFileTextBox, 1, 0);
-            pakFileTableLayoutPanel.Controls.Add(newPakFileTextBox, 1, 1);
-            pakFileTableLayoutPanel.Controls.Add(oldPakFileBrowseButton, 2, 0);
-            pakFileTableLayoutPanel.Controls.Add(newPakFileBrowseButton, 2, 1);
-            pakFileTableLayoutPanel.Dock = DockStyle.Fill;
-            pakFileTableLayoutPanel.Location = new Point(3, 19);
-            pakFileTableLayoutPanel.Name = "pakFileTableLayoutPanel";
-            pakFileTableLayoutPanel.RowCount = 2;
-            pakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
-            pakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
-            pakFileTableLayoutPanel.Size = new Size(946, 58);
-            pakFileTableLayoutPanel.TabIndex = 1;
+            comparisonPakFileTableLayoutPanel.AutoSize = true;
+            comparisonPakFileTableLayoutPanel.ColumnCount = 3;
+            comparisonPakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            comparisonPakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            comparisonPakFileTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            comparisonPakFileTableLayoutPanel.Controls.Add(oldPakFileLabel, 0, 0);
+            comparisonPakFileTableLayoutPanel.Controls.Add(newPakFileLabel, 0, 1);
+            comparisonPakFileTableLayoutPanel.Controls.Add(oldPakFileTextBox, 1, 0);
+            comparisonPakFileTableLayoutPanel.Controls.Add(newPakFileTextBox, 1, 1);
+            comparisonPakFileTableLayoutPanel.Controls.Add(oldPakFileBrowseButton, 2, 0);
+            comparisonPakFileTableLayoutPanel.Controls.Add(newPakFileBrowseButton, 2, 1);
+            comparisonPakFileTableLayoutPanel.Dock = DockStyle.Top;
+            comparisonPakFileTableLayoutPanel.Location = new Point(3, 19);
+            comparisonPakFileTableLayoutPanel.Name = "comparisonPakFileTableLayoutPanel";
+            comparisonPakFileTableLayoutPanel.RowCount = 2;
+            comparisonPakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
+            comparisonPakFileTableLayoutPanel.RowStyles.Add(new RowStyle());
+            comparisonPakFileTableLayoutPanel.Size = new Size(946, 58);
+            comparisonPakFileTableLayoutPanel.TabIndex = 1;
             // 
             // oldPakFileLabel
             // 
@@ -367,12 +342,52 @@
             newPakFileBrowseButton.UseVisualStyleBackColor = true;
             newPakFileBrowseButton.Click += newPakFileBrowseButton_Click;
             // 
+            // diffButtonTableLayoutPanel
+            // 
+            diffButtonTableLayoutPanel.AutoSize = true;
+            diffButtonTableLayoutPanel.ColumnCount = 3;
+            diffButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            diffButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            diffButtonTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            diffButtonTableLayoutPanel.Controls.Add(saveDiffButton, 1, 0);
+            diffButtonTableLayoutPanel.Controls.Add(saveFilteredButton, 2, 0);
+            diffButtonTableLayoutPanel.Dock = DockStyle.Bottom;
+            diffButtonTableLayoutPanel.Enabled = false;
+            diffButtonTableLayoutPanel.Location = new Point(16, 616);
+            diffButtonTableLayoutPanel.Name = "diffButtonTableLayoutPanel";
+            diffButtonTableLayoutPanel.RowCount = 1;
+            diffButtonTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            diffButtonTableLayoutPanel.Size = new Size(952, 29);
+            diffButtonTableLayoutPanel.TabIndex = 4;
+            // 
+            // saveDiffButton
+            // 
+            saveDiffButton.Dock = DockStyle.Fill;
+            saveDiffButton.Location = new Point(755, 3);
+            saveDiffButton.Name = "saveDiffButton";
+            saveDiffButton.Size = new Size(94, 23);
+            saveDiffButton.TabIndex = 0;
+            saveDiffButton.Text = "Save All";
+            saveDiffButton.UseVisualStyleBackColor = true;
+            saveDiffButton.Click += saveDiffButton_Click;
+            // 
+            // saveFilteredButton
+            // 
+            saveFilteredButton.Dock = DockStyle.Fill;
+            saveFilteredButton.Location = new Point(855, 3);
+            saveFilteredButton.Name = "saveFilteredButton";
+            saveFilteredButton.Size = new Size(94, 23);
+            saveFilteredButton.TabIndex = 3;
+            saveFilteredButton.Text = "Save Filtered";
+            saveFilteredButton.UseVisualStyleBackColor = true;
+            saveFilteredButton.Click += saveFilteredButton_Click;
+            // 
             // PakDiffUtilityForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = cancelButton;
-            ClientSize = new Size(984, 561);
+            ClientSize = new Size(984, 661);
             Controls.Add(pakDiffUtilityPanel);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -387,29 +402,28 @@
             filterGroupBox.PerformLayout();
             filterTableLayoutPanel.ResumeLayout(false);
             filterTableLayoutPanel.PerformLayout();
-            buttonTableLayoutPanel.ResumeLayout(false);
-            pakFileGroupBox.ResumeLayout(false);
-            pakFileGroupBox.PerformLayout();
-            pakFileTableLayoutPanel.ResumeLayout(false);
-            pakFileTableLayoutPanel.PerformLayout();
+            comparisonGroupBox.ResumeLayout(false);
+            comparisonGroupBox.PerformLayout();
+            comparisonButtonTableLayoutPanel.ResumeLayout(false);
+            comparisonPakFileTableLayoutPanel.ResumeLayout(false);
+            comparisonPakFileTableLayoutPanel.PerformLayout();
+            diffButtonTableLayoutPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private Panel pakDiffUtilityPanel;
-        private GroupBox pakFileGroupBox;
-        private TableLayoutPanel pakFileTableLayoutPanel;
+        private GroupBox comparisonGroupBox;
+        private TableLayoutPanel comparisonPakFileTableLayoutPanel;
         private Label oldPakFileLabel;
         private Label newPakFileLabel;
         private TextBox oldPakFileTextBox;
         private TextBox newPakFileTextBox;
         private Button oldPakFileBrowseButton;
         private Button newPakFileBrowseButton;
-        private TableLayoutPanel buttonTableLayoutPanel;
+        private TableLayoutPanel diffButtonTableLayoutPanel;
         private Button saveDiffButton;
-        private Button okButton;
-        private Button cancelButton;
         private DataGridView diffDataGridView;
         private DataGridViewTextBoxColumn Column1;
         private GroupBox filterGroupBox;
@@ -421,5 +435,8 @@
         private TextBox filterTextBox;
         private Button clearFilterButton;
         private Button saveFilteredButton;
+        private TableLayoutPanel comparisonButtonTableLayoutPanel;
+        private Button compareButton;
+        private Button cancelButton;
     }
 }

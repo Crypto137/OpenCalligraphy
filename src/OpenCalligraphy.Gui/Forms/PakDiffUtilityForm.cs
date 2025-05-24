@@ -54,8 +54,7 @@ namespace OpenCalligraphy.Gui.Forms
 
             // Toggle controls
             bool hasDiff = string.IsNullOrWhiteSpace(_diffText) == false;
-            saveDiffButton.Enabled = hasDiff;
-            saveFilteredButton.Enabled = hasDiff;
+            diffButtonTableLayoutPanel.Enabled = hasDiff;
             filterGroupBox.Enabled = hasDiff;
         }
 
@@ -215,7 +214,7 @@ namespace OpenCalligraphy.Gui.Forms
                 ApplyFilter();
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void compareButton_Click(object sender, EventArgs e)
         {
             SlowActionForm.ExecuteActions(this,
                 new("Comparing...", "Comparing files...",    () => DoDiff()),
