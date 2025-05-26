@@ -44,6 +44,8 @@
             showAdditionalPrototypeMetadataToolStripMenuItem = new ToolStripMenuItem();
             showEvalExpressionStringsToolStripMenuItem = new ToolStripMenuItem();
             embedEmptyRHStructsToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            pakDiffUtilityToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
@@ -62,8 +64,7 @@
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
             curveTabPage = new TabPage();
             curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
-            toolsToolStripMenuItem = new ToolStripMenuItem();
-            pakDiffUtilityToolStripMenuItem = new ToolStripMenuItem();
+            executableAnalyzerToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -182,6 +183,20 @@
             embedEmptyRHStructsToolStripMenuItem.Text = "Embed Empty RHStructs";
             embedEmptyRHStructsToolStripMenuItem.Click += embedEmptyRHStructsToolStripMenuItem_Click;
             // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pakDiffUtilityToolStripMenuItem, executableAnalyzerToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(46, 20);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // pakDiffUtilityToolStripMenuItem
+            // 
+            pakDiffUtilityToolStripMenuItem.Name = "pakDiffUtilityToolStripMenuItem";
+            pakDiffUtilityToolStripMenuItem.Size = new Size(180, 22);
+            pakDiffUtilityToolStripMenuItem.Text = "Pak Diff Utility";
+            pakDiffUtilityToolStripMenuItem.Click += pakDiffUtilityToolStripMenuItem_Click;
+            // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
@@ -192,7 +207,7 @@
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(180, 22);
+            aboutToolStripMenuItem.Size = new Size(116, 22);
             aboutToolStripMenuItem.Text = "About...";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
@@ -379,19 +394,12 @@
             curveInspectorUserControl.Size = new Size(825, 703);
             curveInspectorUserControl.TabIndex = 0;
             // 
-            // toolsToolStripMenuItem
+            // executableAnalyzerToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { pakDiffUtilityToolStripMenuItem });
-            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            toolsToolStripMenuItem.Size = new Size(46, 20);
-            toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // pakDiffUtilityToolStripMenuItem
-            // 
-            pakDiffUtilityToolStripMenuItem.Name = "pakDiffUtilityToolStripMenuItem";
-            pakDiffUtilityToolStripMenuItem.Size = new Size(180, 22);
-            pakDiffUtilityToolStripMenuItem.Text = "Pak Diff Utility";
-            pakDiffUtilityToolStripMenuItem.Click += pakDiffUtilityToolStripMenuItem_Click;
+            executableAnalyzerToolStripMenuItem.Name = "executableAnalyzerToolStripMenuItem";
+            executableAnalyzerToolStripMenuItem.Size = new Size(180, 22);
+            executableAnalyzerToolStripMenuItem.Text = "Executable Analyzer";
+            executableAnalyzerToolStripMenuItem.Click += executableAnalyzerToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -462,5 +470,6 @@
         private ToolStripMenuItem loadLocaleToolStripMenuItem;
         private ToolStripMenuItem toolsToolStripMenuItem;
         private ToolStripMenuItem pakDiffUtilityToolStripMenuItem;
+        private ToolStripMenuItem executableAnalyzerToolStripMenuItem;
     }
 }

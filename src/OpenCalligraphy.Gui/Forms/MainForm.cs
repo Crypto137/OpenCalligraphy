@@ -421,6 +421,12 @@ namespace OpenCalligraphy.Gui.Forms
             pakDiffUtilityForm.ShowDialog(this);
         }
 
+        private void executableAnalyzerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExecutableAnalyzerForm executableAnalyzerForm = new();
+            executableAnalyzerForm.ShowDialog(this);
+        }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO: Show a separate About form as a modal dialog
