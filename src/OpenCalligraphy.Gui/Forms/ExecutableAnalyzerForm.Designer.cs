@@ -264,6 +264,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "ExecutableAnalyzerForm";
+            ShowIcon = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Executable Analyzer";
             executableAnalyzerPanel.ResumeLayout(false);

@@ -393,6 +393,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "PakDiffUtilityForm";
+            ShowIcon = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Pak Diff Utility";
             pakDiffUtilityPanel.ResumeLayout(false);
