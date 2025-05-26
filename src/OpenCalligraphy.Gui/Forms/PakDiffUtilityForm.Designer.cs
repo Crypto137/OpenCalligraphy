@@ -367,7 +367,7 @@
             saveDiffButton.Name = "saveDiffButton";
             saveDiffButton.Size = new Size(94, 23);
             saveDiffButton.TabIndex = 0;
-            saveDiffButton.Text = "Save All";
+            saveDiffButton.Text = "Save All...";
             saveDiffButton.UseVisualStyleBackColor = true;
             saveDiffButton.Click += saveDiffButton_Click;
             // 
@@ -378,7 +378,7 @@
             saveFilteredButton.Name = "saveFilteredButton";
             saveFilteredButton.Size = new Size(94, 23);
             saveFilteredButton.TabIndex = 3;
-            saveFilteredButton.Text = "Save Filtered";
+            saveFilteredButton.Text = "Save Filtered...";
             saveFilteredButton.UseVisualStyleBackColor = true;
             saveFilteredButton.Click += saveFilteredButton_Click;
             // 

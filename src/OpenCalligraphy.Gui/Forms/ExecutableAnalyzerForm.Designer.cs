@@ -118,6 +118,7 @@
             metadataGroupBox.AutoSize = true;
             metadataGroupBox.Controls.Add(metadataTableLayoutPanel);
             metadataGroupBox.Dock = DockStyle.Top;
+            metadataGroupBox.Enabled = false;
             metadataGroupBox.Location = new Point(16, 96);
             metadataGroupBox.Name = "metadataGroupBox";
             metadataGroupBox.Size = new Size(552, 80);

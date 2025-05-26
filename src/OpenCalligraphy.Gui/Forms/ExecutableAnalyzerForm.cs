@@ -51,6 +51,7 @@ namespace OpenCalligraphy.Gui.Forms
 
             FileTreeHelper.InitializeFileTreeView(sourceFileTreeView, _sourceFileTree);
 
+            metadataGroupBox.Enabled = true;
             sourceFileGroupBox.Enabled = true;
         }
 
