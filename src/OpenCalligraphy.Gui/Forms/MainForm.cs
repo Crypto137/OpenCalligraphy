@@ -429,13 +429,8 @@ namespace OpenCalligraphy.Gui.Forms
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Show a separate About form as a modal dialog
-#if DEBUG
-            string buildConfig = "Debug";
-#else
-            string buildConfig = "Release";
-#endif
-            MessageBox.Show($"OpenCalligraphy\n\nVersion 0.2.0 ({buildConfig})\n\nCopyright © 2025 Crypto137", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AboutForm aboutForm = new();
+            aboutForm.ShowDialog(this);
         }
 
         #endregion
