@@ -6,6 +6,14 @@ using OpenCalligraphy.Gui.Models;
 
 namespace OpenCalligraphy.Gui.Helpers
 {
+    [Flags]
+    public enum PrototypeTreeHelperFlags
+    {
+        None                        = 0,
+        UseEvalExpressionStrings    = 1 << 0,
+        EmbedEmptyRHStructs         = 1 << 1,
+    }
+
     /// <summary>
     /// Helper functions for displaying <see cref="Prototype"/> data in a <see cref="TreeView"/>.
     /// </summary>
@@ -13,32 +21,38 @@ namespace OpenCalligraphy.Gui.Helpers
     {
         #region Build
 
-        public static void SetPrototype(TreeNode root, Prototype prototype, string name)
+        public static void SetPrototype(TreeNode root, Prototype prototype, string name, PrototypeTreeHelperFlags flags)
         {
             root.Text = name;
 
+            // If requested, represent eval prototypes by their expression strings
+            if (flags.HasFlag(PrototypeTreeHelperFlags.UseEvalExpressionStrings))
+            {
+                string expressionString = EvalExpressionStringBuilder.TryBuildExpressionString(prototype);
+                if (expressionString != string.Empty)
+                {
+                    TreeNode child = root.Nodes.Add(expressionString);
+                    child.Tag = new PrimitiveValueTreeNodeTag(expressionString);
+                    return;
+                }
+            }
+
             // If this is an empty RHStruct, treat it as a data ref
             if (prototype.DataRef == PrototypeId.Invalid && prototype.FieldGroups.Count == 0 && prototype.ParentDataRef != PrototypeId.Invalid)
-                root.Tag = new DataRefTreeNodeTag(prototype.ParentDataRef);
-
-            // Push this prototype and all of its parents to a stack
-            Stack<Prototype> prototypeStack = new();
-            while (prototype != null)
             {
-                prototypeStack.Push(prototype);
-                prototype = GameDatabase.GetPrototype(prototype.ParentDataRef);
+                root.Tag = new DataRefTreeNodeTag(prototype.ParentDataRef);
+                if (flags.HasFlag(PrototypeTreeHelperFlags.EmbedEmptyRHStructs) == false)
+                    return;
             }
 
             // Load the default data from the top parent and apply overrides from all of its children
             Dictionary<FieldGroupKey, TreeNode> fieldGroupNodes = new();
             Dictionary<FieldKey, TreeNode> fieldNodes = new();
 
-            while (prototypeStack.Count > 0)
+            foreach (Prototype currentPrototype in prototype.IterateHierarchy())
             {
-                Prototype currentPrototype = prototypeStack.Pop();
-
                 // Highlight fields overriden by the last child (the prototype we want to inspecting)
-                bool highlightFields = prototypeStack.Count == 0 && currentPrototype.ParentDataRef != PrototypeId.Invalid;
+                bool highlightFields = currentPrototype == prototype && currentPrototype.ParentDataRef != PrototypeId.Invalid;
 
                 foreach (PrototypeFieldGroup fieldGroup in currentPrototype.OrderBy(fieldGroup => fieldGroup.DeclaringBlueprintId.GetName()))
                 {
@@ -51,7 +65,7 @@ namespace OpenCalligraphy.Gui.Helpers
                     foreach (PrototypeField field in fieldList)
                     {
                         TreeNode fieldNode = GetOrCreateNode(new FieldKey(fieldGroup, field), fieldGroupNode, fieldNodes);
-                        SetField(fieldNode, field, highlightFields);
+                        SetField(fieldNode, field, highlightFields, flags);
                     }
                 }
             }
@@ -72,18 +86,18 @@ namespace OpenCalligraphy.Gui.Helpers
             return node;
         }
 
-        private static void SetField(TreeNode node, PrototypeField field, bool highlight)
+        private static void SetField(TreeNode node, PrototypeField field, bool highlight, PrototypeTreeHelperFlags flags)
         {
             if (field.StructureType == CalligraphyStructureType.Simple)
-                SetSimpleField(node, field);
+                SetSimpleField(node, field, flags);
             else if (field.StructureType == CalligraphyStructureType.List)
-                SetListField(node, field);
+                SetListField(node, field, flags);
 
             if (highlight)
                 node.NodeFont = new(node.TreeView.Font, FontStyle.Bold);
         }
 
-        private static void SetSimpleField(TreeNode node, PrototypeField field)
+        private static void SetSimpleField(TreeNode node, PrototypeField field, PrototypeTreeHelperFlags flags)
         {
             switch (field)
             {
@@ -122,7 +136,7 @@ namespace OpenCalligraphy.Gui.Helpers
                         value = $"null ({DataDirectory.Instance.GetPrototypeRuntimeBinding(subtype)})";
                     }
 
-                    SetPrototype(node, rhStructField.Value, $"{field.FieldId.GetName()}: {value}");
+                    SetPrototype(node, rhStructField.Value, $"{field.FieldId.GetName()}: {value}", flags);
                     return;
 
                 case PrototypeStringField stringField:
@@ -148,7 +162,7 @@ namespace OpenCalligraphy.Gui.Helpers
             node.Text = $"{field.FieldId.GetName()}: {field}";
         }
 
-        private static void SetListField(TreeNode node, PrototypeField field)
+        private static void SetListField(TreeNode node, PrototypeField field, PrototypeTreeHelperFlags flags)
         {
             node.Nodes.Clear();
             node.Text = $"{field.FieldId.GetName()}: {field}";
@@ -180,7 +194,7 @@ namespace OpenCalligraphy.Gui.Helpers
                     {
                         Prototype rhStruct = rhStructListField[i];
                         TreeNode child = node.Nodes.Add(string.Empty);
-                        SetPrototype(child, rhStruct, $"[{i}] {rhStruct}");
+                        SetPrototype(child, rhStruct, $"[{i}] {rhStruct}", flags);
                     }
                     break;
 

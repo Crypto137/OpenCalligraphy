@@ -31,7 +31,6 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
             return _fieldGroups.GetEnumerator();
         }
 
-
         IEnumerator<PrototypeFieldGroup> IEnumerable<PrototypeFieldGroup>.GetEnumerator()
         {
             return GetEnumerator();
@@ -40,6 +39,24 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Iterates all prototypes in hierarchy from the top parent to this instance.
+        /// </summary>
+        public IEnumerable<Prototype> IterateHierarchy()
+        {
+            Stack<Prototype> prototypeStack = new();
+
+            Prototype prototype = this;
+            while (prototype != null)
+            {
+                prototypeStack.Push(prototype);
+                prototype = GameDatabase.GetPrototype(prototype.ParentDataRef);
+            }
+
+            while (prototypeStack.Count > 0)
+                yield return prototypeStack.Pop();
         }
 
         public void ParseFrom(BinaryReader reader)
@@ -64,6 +81,27 @@ namespace OpenCalligraphy.Core.GameData.Prototypes
 
                 _fieldGroups.Add(fieldGroup);
             }
+        }
+
+        /// <summary>
+        /// Searches this <see cref="Prototype"/> and its parents for the field with the specified <see cref="StringId"/>.
+        /// </summary>
+        public T GetField<T>(StringId fieldId) where T: PrototypeField
+        {
+            // Search this prototype
+            foreach (PrototypeFieldGroup fieldGroup in _fieldGroups)
+            {
+                T field = fieldGroup.GetField<T>(fieldId);
+                if (field != null)
+                    return field;
+            }
+
+            // Search parent if not found
+            if (ParentDataRef != PrototypeId.Invalid)
+                return ParentDataRef.AsPrototype()?.GetField<T>(fieldId);
+
+            // Not found and no parents to search
+            return null;
         }
     }
 }

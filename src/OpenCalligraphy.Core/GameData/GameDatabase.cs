@@ -59,6 +59,17 @@ namespace OpenCalligraphy.Core.GameData
 
         #region Data Access
 
+        public static Curve GetCurve(CurveId curveId)
+        {
+            return CurveDirectory.Instance.GetCurve(curveId);
+        }
+
+        public static Curve GetCurve(string curveName)
+        {
+            CurveId curveId = CurveRefManager.GetDataRefByName(curveName);
+            return CurveDirectory.Instance.GetCurve(curveId);
+        }
+
         public static Blueprint GetBlueprint(BlueprintId blueprintId)
         {
             return DataDirectory.GetBlueprint(blueprintId);
@@ -103,6 +114,11 @@ namespace OpenCalligraphy.Core.GameData
         public static string GetPrototypeName(PrototypeId prototypeId)
         {
             return PrototypeRefManager.GetReferenceName(prototypeId);
+        }
+
+        public static string GetFormattedPrototypeName(PrototypeId prototypeId)
+        {
+            return Path.GetFileNameWithoutExtension(GetPrototypeName(prototypeId));
         }
 
         #endregion

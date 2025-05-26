@@ -5,6 +5,7 @@
         public override CalligraphyBaseType BaseType { get => CalligraphyBaseType.RHStruct; }
 
         public Prototype Value { get; private set; }
+        public bool IsNull { get => Value.HasInstanceData == false && Value.ParentDataRef == PrototypeId.Invalid; }
 
         public PrototypeRHStructField(BlueprintId declaringBlueprintId, StringId fieldId) : base(declaringBlueprintId, fieldId)
         {

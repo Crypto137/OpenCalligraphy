@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCalligraphy.Core", "Ope
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCalligraphy.Gui", "OpenCalligraphy.Gui\OpenCalligraphy.Gui.csproj", "{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCalligraphy.DiffTool", "OpenCalligraphy.DiffTool\OpenCalligraphy.DiffTool.csproj", "{65C402C5-9A6A-4AF5-AB37-7E278C34C0E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F002EE58-6B29-4EBA-BCAB-152E10AA1D5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C402C5-9A6A-4AF5-AB37-7E278C34C0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C402C5-9A6A-4AF5-AB37-7E278C34C0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C402C5-9A6A-4AF5-AB37-7E278C34C0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C402C5-9A6A-4AF5-AB37-7E278C34C0E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 ﻿using OpenCalligraphy.Core.Extensions;
+using OpenCalligraphy.Core.FileSystem;
 using OpenCalligraphy.Core.GameData.Prototypes;
-using OpenCalligraphy.Core.IO;
 using OpenCalligraphy.Core.Logging;
 
 namespace OpenCalligraphy.Core.GameData
@@ -29,6 +29,7 @@ namespace OpenCalligraphy.Core.GameData
         public static DataDirectory Instance { get; } = new();
 
         // Subdirectories
+        public CurveDirectory CurveDirectory { get; } = CurveDirectory.Instance;
         public AssetDirectory AssetDirectory { get; } = AssetDirectory.Instance;
         public ReplacementDirectory ReplacementDirectory { get; } = ReplacementDirectory.Instance;
 
@@ -47,7 +48,7 @@ namespace OpenCalligraphy.Core.GameData
             var directories = new (string, Action<BinaryReader>, Action)[]
             {
                 // Directory file path                  // Entry read method            // Callback
-                ("Calligraphy/Curve.directory",         ReadCurveDirectoryEntry,        () => { }),
+                ("Calligraphy/Curve.directory",         ReadCurveDirectoryEntry,        () => Logger.Info($"Loaded {CurveDirectory.RecordCount} curves")),
                 ("Calligraphy/Type.directory",          ReadTypeDirectoryEntry,         () => Logger.Info($"Loaded {AssetDirectory.AssetCount} asset entries of {AssetDirectory.AssetTypeCount} types")),
                 ("Calligraphy/Blueprint.directory",     ReadBlueprintDirectoryEntry,    () => Logger.Info($"Loaded {_blueprintRecordDict.Count} blueprints")),
                 ("Calligraphy/Prototype.directory",     ReadPrototypeDirectoryEntry,    () => Logger.Info($"Loaded {_prototypeRecordDict.Count} Calligraphy prototype entries")),
@@ -82,11 +83,12 @@ namespace OpenCalligraphy.Core.GameData
             _prototypeRecordDict.Clear();
             _prototypeGuidToDataRefDict.Clear();
 
+            CurveDirectory.Clear();
             AssetDirectory.Clear();
             ReplacementDirectory.Clear();
         }
 
-        private Stream LoadPakDataFile(string filePath)
+        public Stream LoadPakDataFile(string filePath)
         {
             return _pakFile.LoadFileDataInPak(filePath);
         }
@@ -199,6 +201,14 @@ namespace OpenCalligraphy.Core.GameData
             return record.RuntimeBinding;
         }
 
+        public PrototypeDataRefRecord GetPrototypeDataRefRecord(PrototypeId prototypeId)
+        {
+            if (_prototypeRecordDict.TryGetValue(prototypeId, out PrototypeDataRefRecord record) == false)
+                return null;
+
+            return record;
+        }
+
         public IEnumerable<PrototypeId> IteratePrototypes()
         {
             // TODO: Improve this
@@ -206,12 +216,10 @@ namespace OpenCalligraphy.Core.GameData
                 yield return record.PrototypeId;
         }
 
-        public PrototypeDataRefRecord GetPrototypeDataRefRecord(PrototypeId prototypeId)
+        public IEnumerable<Blueprint> IterateBlueprints()
         {
-            if (_prototypeRecordDict.TryGetValue(prototypeId, out PrototypeDataRefRecord record) == false)
-                return null;
-
-            return record;
+            foreach (var record in _blueprintRecordDict.Values)
+                yield return record.Blueprint;
         }
 
         #endregion
@@ -246,13 +254,10 @@ namespace OpenCalligraphy.Core.GameData
             string filePath = reader.ReadFixedString16().Replace('\\', '/');
 
             GameDatabase.CurveRefManager.AddDataRef(curveId, filePath);
-
-            /* TODO
-            var record = CurveDirectory.CreateCurveRecord(curveId, flags);
+            var record = CurveDirectory.CreateCurveRecord(curveId, guid, flags);
 
             // Load this curve
             CurveDirectory.GetCurve(curveId);
-            */
         }
 
         /// <summary>

@@ -50,11 +50,12 @@ namespace OpenCalligraphy.Gui.Models
 
         public object GetData()
         {
-            // TODO: Add curves and assets
+            // TODO: Add assets
             return Type switch
             {
+                CalligraphyBaseType.Curve       => ((CurveId)DataRef).AsCurve(),
                 CalligraphyBaseType.Prototype   => ((PrototypeId)DataRef).AsPrototype(),
-                _                               => null,
+                _ => null,
             };
         }
     }

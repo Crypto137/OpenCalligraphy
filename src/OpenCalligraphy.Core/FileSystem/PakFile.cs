@@ -2,7 +2,7 @@
 using OpenCalligraphy.Core.Extensions;
 using OpenCalligraphy.Core.Helpers;
 
-namespace OpenCalligraphy.Core.IO
+namespace OpenCalligraphy.Core.FileSystem
 {
     // TODO: This implementation is based on MHServerEmu and is designed for efficient reads, probably need to overhaul this for output.
 
@@ -18,7 +18,8 @@ namespace OpenCalligraphy.Core.IO
         private const uint SQLiteSignature = 1766609235;    // SQLi(ite format 3)
         private const uint Version = 1;
 
-        private readonly Dictionary<string, PakEntry> _entryDict = new();
+        private readonly string _name;
+        private readonly Dictionary<string, Entry> _entryDict = new();
         private readonly byte[] _data;
 
         public uint Checksum { get; private set; }
@@ -29,7 +30,9 @@ namespace OpenCalligraphy.Core.IO
         public PakFile(string pakFilePath)
         {
             if (File.Exists(pakFilePath) == false)
-                throw new CalligraphyException($"PakFile {pakFilePath} not found.");
+                throw new CalligraphyException($"PakFile '{pakFilePath}' not found.");
+
+            _name = Path.GetFileName(pakFilePath);
 
             using FileStream stream = File.OpenRead(pakFilePath);
             using BinaryReader reader = new(stream);
@@ -57,7 +60,7 @@ namespace OpenCalligraphy.Core.IO
 
                 // We make use of the fact that entries are in the same order as their compressed data that follows,
                 // so we can get the full size of the compressed data section from the last entry.
-                PakEntry newEntry = default;
+                Entry newEntry = default;
 
                 for (int i = 0; i < numEntries; i++)
                 {
@@ -78,12 +81,22 @@ namespace OpenCalligraphy.Core.IO
             Checksum = CalculateChecksum();
         }
 
+        public override string ToString()
+        {
+            return _name;
+        }
+
+        public Dictionary<string, Entry>.ValueCollection.Enumerator GetEnumerator()
+        {
+            return _entryDict.Values.GetEnumerator();
+        }
+
         /// <summary>
         /// Returns a <see cref="Stream"/> of decompressed data for the file stored at the specified path in this <see cref="PakFile"/>.
         /// </summary>
         public Stream LoadFileDataInPak(string filePath)
         {
-            if (_entryDict.TryGetValue(filePath, out PakEntry entry) == false)
+            if (_entryDict.TryGetValue(filePath, out Entry entry) == false)
                 throw new CalligraphyException($"File '{filePath}' not found in the PakFile.");
 
             ReadOnlySpan<byte> compressedData = _data.AsSpan(entry.Offset, entry.CompressedSize);
@@ -103,7 +116,7 @@ namespace OpenCalligraphy.Core.IO
         /// <summary>
         /// Metadata for a file contained in a <see cref="PakFile"/>.
         /// </summary>
-        private readonly struct PakEntry
+        public class Entry
         {
             public ulong FileHash { get; }
             public string FilePath { get; }
@@ -112,7 +125,7 @@ namespace OpenCalligraphy.Core.IO
             public int CompressedSize { get; }
             public int UncompressedSize { get; }
 
-            public PakEntry(BinaryReader reader)
+            public Entry(BinaryReader reader)
             {
                 FileHash = reader.ReadUInt64();
                 FilePath = reader.ReadFixedString32();

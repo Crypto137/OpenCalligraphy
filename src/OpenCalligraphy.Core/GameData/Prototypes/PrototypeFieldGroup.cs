@@ -52,5 +52,27 @@
                 AddField(field);
             }
         }
+
+        public T GetField<T>(StringId fieldId) where T: PrototypeField
+        {
+            Type fieldType = typeof(T);
+
+            List<PrototypeField> fieldList = null;
+            if (fieldType.IsAssignableTo(typeof(PrototypeSimpleField)))
+                fieldList = _simpleFields;
+            else if (fieldType.IsAssignableTo(typeof(PrototypeListField)))
+                fieldList = _listFields;
+
+            if (fieldList != null)
+            {
+                foreach (PrototypeField field in fieldList)
+                {
+                    if (field.FieldId == fieldId)
+                        return field as T;
+                }
+            }
+
+            return null;
+        }
     }
 }

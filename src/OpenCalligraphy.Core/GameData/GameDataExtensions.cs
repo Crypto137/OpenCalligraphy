@@ -8,6 +8,14 @@ namespace OpenCalligraphy.Core.GameData
     public static class GameDataExtensions
     {
         /// <summary>
+        /// Returns the <see cref="Curve"/> that this <see cref="CurveId"/> refers to.
+        /// </summary>
+        public static Curve AsCurve(this CurveId curveId)
+        {
+            return GameDatabase.GetCurve(curveId);
+        }
+
+        /// <summary>
         /// Returns the <see cref="Blueprint"/> that this <see cref="BlueprintId"/> refers to.
         /// </summary>
         public static Blueprint AsBlueprint(this BlueprintId blueprintId)
@@ -61,6 +69,14 @@ namespace OpenCalligraphy.Core.GameData
         public static string GetName(this PrototypeId prototypeId)
         {
             return GameDatabase.GetPrototypeName(prototypeId);
+        }
+
+        /// <summary>
+        /// Returns the formatted name of this <see cref="PrototypeId"/> (just the file name instead of the whole path).
+        /// </summary>
+        public static string GetNameFormatted(this PrototypeId prototypeId)
+        {
+            return GameDatabase.GetFormattedPrototypeName(prototypeId);
         }
 
         /// <summary>
