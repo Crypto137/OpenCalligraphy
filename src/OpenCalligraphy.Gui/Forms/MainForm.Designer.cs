@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
@@ -46,6 +47,7 @@
             embedEmptyRHStructsToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             pakDiffUtilityToolStripMenuItem = new ToolStripMenuItem();
+            executableAnalyzerToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
@@ -64,7 +66,8 @@
             prototypeInspectorUserControl = new OpenCalligraphy.Gui.UserControls.PrototypeInspectorUserControl();
             curveTabPage = new TabPage();
             curveInspectorUserControl = new OpenCalligraphy.Gui.UserControls.CurveInspectorUserControl();
-            executableAnalyzerToolStripMenuItem = new ToolStripMenuItem();
+            searchContextMenuStrip = new ContextMenuStrip(components);
+            focusInFileBrowserToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -78,6 +81,7 @@
             inspectorTabControl.SuspendLayout();
             prototypeTabPage.SuspendLayout();
             curveTabPage.SuspendLayout();
+            searchContextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuStrip1
@@ -193,9 +197,16 @@
             // pakDiffUtilityToolStripMenuItem
             // 
             pakDiffUtilityToolStripMenuItem.Name = "pakDiffUtilityToolStripMenuItem";
-            pakDiffUtilityToolStripMenuItem.Size = new Size(180, 22);
+            pakDiffUtilityToolStripMenuItem.Size = new Size(179, 22);
             pakDiffUtilityToolStripMenuItem.Text = "Pak Diff Utility";
             pakDiffUtilityToolStripMenuItem.Click += pakDiffUtilityToolStripMenuItem_Click;
+            // 
+            // executableAnalyzerToolStripMenuItem
+            // 
+            executableAnalyzerToolStripMenuItem.Name = "executableAnalyzerToolStripMenuItem";
+            executableAnalyzerToolStripMenuItem.Size = new Size(179, 22);
+            executableAnalyzerToolStripMenuItem.Text = "Executable Analyzer";
+            executableAnalyzerToolStripMenuItem.Click += executableAnalyzerToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -290,6 +301,7 @@
             fileSearchTreeView.TabIndex = 1;
             fileSearchTreeView.BeforeExpand += fileSearchTreeView_BeforeExpand;
             fileSearchTreeView.AfterSelect += fileSearchTreeView_AfterSelect;
+            fileSearchTreeView.NodeMouseClick += fileSearchTreeView_NodeMouseClick;
             // 
             // searchTableLayoutPanel
             // 
@@ -394,12 +406,18 @@
             curveInspectorUserControl.Size = new Size(825, 703);
             curveInspectorUserControl.TabIndex = 0;
             // 
-            // executableAnalyzerToolStripMenuItem
+            // searchContextMenuStrip
             // 
-            executableAnalyzerToolStripMenuItem.Name = "executableAnalyzerToolStripMenuItem";
-            executableAnalyzerToolStripMenuItem.Size = new Size(180, 22);
-            executableAnalyzerToolStripMenuItem.Text = "Executable Analyzer";
-            executableAnalyzerToolStripMenuItem.Click += executableAnalyzerToolStripMenuItem_Click;
+            searchContextMenuStrip.Items.AddRange(new ToolStripItem[] { focusInFileBrowserToolStripMenuItem });
+            searchContextMenuStrip.Name = "searchContextMenuStrip";
+            searchContextMenuStrip.Size = new Size(185, 48);
+            // 
+            // focusInFileBrowserToolStripMenuItem
+            // 
+            focusInFileBrowserToolStripMenuItem.Name = "focusInFileBrowserToolStripMenuItem";
+            focusInFileBrowserToolStripMenuItem.Size = new Size(184, 22);
+            focusInFileBrowserToolStripMenuItem.Text = "Focus in File Browser";
+            focusInFileBrowserToolStripMenuItem.Click += focusInFileBrowserToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -429,6 +447,7 @@
             inspectorTabControl.ResumeLayout(false);
             prototypeTabPage.ResumeLayout(false);
             curveTabPage.ResumeLayout(false);
+            searchContextMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -471,5 +490,7 @@
         private ToolStripMenuItem toolsToolStripMenuItem;
         private ToolStripMenuItem pakDiffUtilityToolStripMenuItem;
         private ToolStripMenuItem executableAnalyzerToolStripMenuItem;
+        private ContextMenuStrip searchContextMenuStrip;
+        private ToolStripMenuItem focusInFileBrowserToolStripMenuItem;
     }
 }

@@ -172,6 +172,12 @@ namespace OpenCalligraphy.Gui.Forms
             }
         }
 
+        internal void FocusFile(string path)
+        {
+            fileTabControl.SelectedIndex = fileTabControl.TabPages.IndexOf(browseTabPage);
+            FileTreeHelper.FocusNode(fileTreeView, path);
+        }
+
         internal void OpenDataRefTag(DataRefTreeNodeTag dataRefTag)
         {
             object data = dataRefTag.GetData();
@@ -471,6 +477,33 @@ namespace OpenCalligraphy.Gui.Forms
         private void fileSearchTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             TryOpenFile(e.Node);
+        }
+
+        private void fileSearchTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Show context menu on right click
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            if (e.Node.Tag is not FileTreeNode fileTreeNode)
+                return;
+
+            if (fileTreeNode.IsFile == false)
+                return;
+
+            searchContextMenuStrip.Tag = fileTreeNode;
+            searchContextMenuStrip.Show(e.Node.TreeView, e.Location);
+        }
+
+        private void focusInFileBrowserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem menuItem)
+                return;
+
+            if (menuItem.Owner.Tag is not FileTreeNode fileTreeNode)
+                return;
+
+            FocusFile(fileTreeNode.FilePath);
         }
 
         #endregion

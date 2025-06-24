@@ -6,6 +6,14 @@ using OpenCalligraphy.Gui.Models;
 
 namespace OpenCalligraphy.Gui.UserControls
 {
+    [Flags]
+    public enum PrototypeInspectFlags
+    {
+        None            = 0,
+        AddToHistory    = 1 << 0,
+        ForceReload     = 1 << 1,
+    }
+
     public partial class PrototypeInspectorUserControl : UserControl
     {
         private readonly Stack<PrototypeId> _prototypeBackStack = new();
@@ -20,11 +28,15 @@ namespace OpenCalligraphy.Gui.UserControls
 
         #region Prototype Inspector
 
-        public void InspectPrototype(Prototype prototype, bool addToHistory = true)
+        public void InspectPrototype(Prototype prototype, PrototypeInspectFlags flags = PrototypeInspectFlags.AddToHistory)
         {
             // NOTE: null prototype is valid input here to clear the inspector
 
-            if (addToHistory)
+            // Do not reload the current prototype if we already have it loaded unless we were explicitly requested to reload it
+            if (prototypeTreeView.Tag is Prototype currentPrototype && currentPrototype == prototype && flags.HasFlag(PrototypeInspectFlags.ForceReload) == false)
+                return;
+
+            if (flags.HasFlag(PrototypeInspectFlags.AddToHistory))
                 AddPrototypeToInspectHistory(prototypeTreeView.Tag as Prototype);
 
             ClearPrototypeSearchResults();
@@ -39,7 +51,7 @@ namespace OpenCalligraphy.Gui.UserControls
         public void ReloadPrototype()
         {
             if (prototypeTreeView.Tag is Prototype prototype)
-                InspectPrototype(prototype, false);
+                InspectPrototype(prototype, PrototypeInspectFlags.ForceReload);
         }
 
         public void Clear()
@@ -155,7 +167,7 @@ namespace OpenCalligraphy.Gui.UserControls
 
             PrototypeId previousProtoRef = _prototypeBackStack.Pop();
             Prototype previousProto = previousProtoRef.AsPrototype();
-            InspectPrototype(previousProto, false);
+            InspectPrototype(previousProto, PrototypeInspectFlags.None);
 
             RefreshPrototypeInspectHistoryButtons();
         }
@@ -170,7 +182,7 @@ namespace OpenCalligraphy.Gui.UserControls
 
             PrototypeId nextProtoRef = _prototypeForwardStack.Pop();
             Prototype nextProto = nextProtoRef.AsPrototype();
-            InspectPrototype(nextProto, false);
+            InspectPrototype(nextProto, PrototypeInspectFlags.None);
 
             RefreshPrototypeInspectHistoryButtons();
         }
