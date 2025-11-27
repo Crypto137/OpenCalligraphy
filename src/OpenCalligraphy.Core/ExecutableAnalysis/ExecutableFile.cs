@@ -43,7 +43,7 @@ namespace OpenCalligraphy.Core.ExecutableAnalysis
 
             // Load the executable and check for the Shipping signature
             Data = File.ReadAllBytes(filePath);
-            IsShipping = CheckShippingSignature();
+            IsShipping = Data.AsSpan().IndexOf(ShippingSignature) != -1;
         }
 
         public override string ToString()
@@ -66,27 +66,30 @@ namespace OpenCalligraphy.Core.ExecutableAnalysis
             Stopwatch stopwatch = Stopwatch.StartNew();
             List<string> filePathList = new();
 
+            byte firstByte = PathSignature[0];
+            int signatureLength = PathSignature.Length;
+
             // Look for our source file path signature
             for (int i = 0; i < Data.Length; i++)
             {
-                // Check the entire signature only if the first character matches
-                if (Data[i] != PathSignature[0])
+                // Check the entire signature only if the first byte matches
+                if (Data[i] != firstByte)
                     continue;
 
-                if (PathSignature.SequenceEqual(Data.Skip(i).Take(PathSignature.Length)))
-                {
-                    List<byte> byteList = new();
+                if (Data.AsSpan(i, signatureLength).SequenceEqual(PathSignature) == false)
+                    continue;
 
-                    // Our signature contains beginning of a path after the drive letter
-                    // because the letter can be both lower and upper case.
-                    // We start our second loop one position before and then read bytes until
-                    // we reach a null, since paths are null-terminated strings.
-                    for (int j = i - 1; Data[j] != 0x00; j++)
-                        byteList.Add(Data[j]);
+                List<byte> byteList = new();
 
-                    string filePath = Encoding.UTF8.GetString(byteList.ToArray());
-                    filePathList.Add(filePath);
-                }
+                // Our signature contains the beginning of a path after the drive letter
+                // because the letter can be both lower and upper case.
+                // We start our inner loop one position before and then read bytes until
+                // we reach a null, because paths are null-terminated strings.
+                for (int j = i - 1; Data[j] != 0x00; j++)
+                    byteList.Add(Data[j]);
+
+                string filePath = Encoding.UTF8.GetString(byteList.ToArray());
+                filePathList.Add(filePath);
             }
 
             stopwatch.Stop();
@@ -111,26 +114,6 @@ namespace OpenCalligraphy.Core.ExecutableAnalysis
             Logger.Info($"Found {filePathList.Count} unique file paths");
 
             outputFilePathList.AddRange(filePathList);
-        }
-
-        /// <summary>
-        /// Returns <see langword="true"/> if this <see cref="ExecutableFile"/> contains the signature of the Shipping build configuration.
-        /// </summary>
-        private bool CheckShippingSignature()
-        {
-            // HACK: Speed this up by starting near the end of the executable where the build config
-            // signatures we are looking for should be.
-            for (int i = Data.Length - Data.Length / 5; i < Data.Length; i++)
-            {
-                // Check the entire signature only if the first character matches
-                if (Data[i] != ShippingSignature[0])
-                    continue;
-
-                if (ShippingSignature.SequenceEqual(Data.Skip(i).Take(ShippingSignature.Length)))
-                    return true;
-            }
-
-            return false;
         }
     }
 }
